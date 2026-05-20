@@ -6,7 +6,7 @@ export default function AuthPages() {
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const API = "http://localhost:5000";
+  const API ="";
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -20,15 +20,22 @@ export default function AuthPages() {
     }
   setLoading(true);
   try {
-    const response = await fetch(`${API}/auth/login`, {
+    const response = await fetch(`/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email: form.email, password: form.password }),
     });
     const data = await response.json();
+    console.log('Login response:', data);
     if (!response.ok) throw new Error(data.message || 'Login failed');
     setMessage({ type: 'success', text: `Welcome back! Logged in as ${form.email}` });
     // Optionally, save token to localStorage or context
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify({ email: form.email }));
+
+    setTimeout(() => {
+      window.location.href = "/products"; // Redirect to products page after successful login
+    }, 1000);
 
   } catch (error) {
     setMessage({ type: 'error', text: error.message });
@@ -48,7 +55,7 @@ const handleRegister = async () => {
   }
   setLoading(true);
   try {
-    const response = await fetch(`${API}/auth/register`, {
+    const response = await fetch(`/auth/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({

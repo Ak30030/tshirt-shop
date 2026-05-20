@@ -3,13 +3,19 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
+import productRoutes from './routes/Products.js';
+import cartRoutes from './routes/Cart.js';
 
 dotenv.config();
 
 const app = express();
 
 // ✅ Middleware FIRST
-app.use(cors());
+app.use(cors({
+  origin: '*',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -18,12 +24,9 @@ app.get('/', (req, res) => {
   res.json({ message: 'T-Shirt Shop API is running!' });
 });
 
-app.post('/test', (req, res) => {
-  console.log('Test body:', req.body);
-  res.json({ received: req.body });
-});
-
-app.use('/auth', authRoutes); // ← moved to bottom
+app.use('/auth', authRoutes);
+app.use('/products', productRoutes);
+app.use('/cart', cartRoutes);
 
 mongoose.connect(process.env.MONGODB_URI, { family: 4 })
   .then(() => console.log('✅ Connected to MongoDB'))
