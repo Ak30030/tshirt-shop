@@ -27,7 +27,6 @@ app.get('/', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
 app.use('/cart', cartRoutes);
-
 mongoose.connect(process.env.MONGODB_URI, { family: 4 })
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((error) => console.error('❌ Error:', error.message));

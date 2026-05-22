@@ -5,7 +5,14 @@ export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const getToken = () => localStorage.getItem("token");
+  const getToken = () =>{
+    const token = localStorage.getItem("token");
+    if(!token) return null;
+    return token.replace(/[^\x00-\x7F]/g, "");
+  };
+
+  
+
 
   const addToCart = async (product, size, color) => {
     const token = getToken();

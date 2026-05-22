@@ -55,7 +55,7 @@ export default function CartPage() {
                     <div className="item-meta">
                       Size: <span>{item.size}</span> · Color: <span>{item.color}</span>
                     </div>
-                    <div className="item-price">${item.price.toFixed(2)}</div>
+                    <div className="item-price">₵{item.price.toFixed(2)}</div>
                     <div className="item-actions">
                       <div className="quantity-control">
                         <button
@@ -80,7 +80,7 @@ export default function CartPage() {
                       </button>
                     </div>
                   </div>
-                  <div className="item-total">${(item.price * item.quantity).toFixed(2)}</div>
+                  <div className="item-total">₵{(item.price * item.quantity).toFixed(2)}</div>
                 </div>
               ))}
 
@@ -94,7 +94,7 @@ export default function CartPage() {
                 {Array.isArray(cart) && cart.map((item) => (
                   <div className="summary-row" key={item._id}>
                     <span>{item.name} x {item.quantity}</span>
-                    <span>${(item.price * item.quantity).toFixed(2)}</span>
+                    <span>₵{(item.price * item.quantity).toFixed(2)}</span>
                   </div>
                 ))}
               </div>
@@ -103,22 +103,22 @@ export default function CartPage() {
 
               <div className="summary-row">
                 <span>Subtotal</span>
-                <span>${cartTotal.toFixed(2)}</span>
+                <span>₵{cartTotal.toFixed(2)}</span>
               </div>
               <div className="summary-row">
                 <span>Shipping</span>
-                <span>{cartTotal > 50 ? 'Free' : '$5.99'}</span>
+                <span>{cartTotal > 210 ? 'Free' : '₵5.99'}</span>
               </div>
 
               <div className="summary-divider"></div>
 
               <div className="summary-total">
                 <span>Total</span>
-                <span>${(cartTotal > 50 ? cartTotal : cartTotal + 5.99).toFixed(2)}</span>
+                <span>₵{(cartTotal > 210 ? cartTotal : cartTotal + 15).toFixed(2)}</span>
               </div>
 
-              {cartTotal < 50 && (
-                <div className="shipping-note">Add ${(50 - cartTotal).toFixed(2)} more for free shipping!</div>
+              {cartTotal > 210 && (
+                <div className="shipping-note">Add ₵{(210 - cartTotal).toFixed(2)} more for free shipping!</div>
               )}
 
               <button className="checkout-btn">Proceed to Checkout</button>

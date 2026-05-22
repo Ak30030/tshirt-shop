@@ -1,5 +1,6 @@
 import express from 'express';
 import Product from '../models/Product.js';
+import {protect,adminOnly} from '../middleware/auth.js';
 
 const router = express.Router();
 
@@ -25,7 +26,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.post('/', async (req, res) => {
+router.post('/',protect,adminOnly, async (req, res) => {
   try {
     const product = new Product(req.body);
     await product.save();
@@ -35,7 +36,7 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.put('/:id', async (req, res) => {
+router.put('/:id',protect,adminOnly, async (req, res) => {
   try {
     const update = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!update) {
@@ -47,7 +48,7 @@ router.put('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id',protect,adminOnly, async (req, res) => {
   try {
     const deleted = await Product.findByIdAndDelete(req.params.id); 
     if (!deleted) {

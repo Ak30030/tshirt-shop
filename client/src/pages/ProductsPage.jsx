@@ -138,7 +138,7 @@ export default function ProductsPage() {
                   <div className="product-name">{product.name}</div>
                   <div className="product-desc">{product.description}</div>
                   <div className="product-footer">
-                    <div className="product-price">${product.price.toFixed(2)}</div>
+                    <div className="product-price">₵{product.price.toFixed(2)}</div>
                     <div className="product-sizes">
                       {product.sizes?.slice(0, 3).map((size) => (
                         <span key={size} className="size-tag">

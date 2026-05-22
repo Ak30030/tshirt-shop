@@ -1,6 +1,7 @@
 import express from "express";
 import Cart from "../models/Cart.js";
 import jwt from "jsonwebtoken";
+import { protect } from "../middleware/auth.js";
 
 const router = express.Router();
 
@@ -23,8 +24,8 @@ router.get("/", authMiddleware, async (req, res) => {
   try {
     let cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) {
-      c
-      art = await Cart.create({ userId: req.user.id, items: [] });
+      
+      cart = await Cart.create({ userId: req.user.id, items: [] });
     }
     res.json(cart);
   } catch (error) {
