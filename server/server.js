@@ -5,6 +5,8 @@ import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
 import productRoutes from './routes/Products.js';
 import cartRoutes from './routes/Cart.js';
+import orderRoutes from './routes/Orders.js';
+
 
 dotenv.config();
 
@@ -27,6 +29,7 @@ app.get('/', (req, res) => {
 app.use('/auth', authRoutes);
 app.use('/products', productRoutes);
 app.use('/cart', cartRoutes);
+app.use('/orders', orderRoutes);
 mongoose.connect(process.env.MONGODB_URI, { family: 4 })
   .then(() => console.log('✅ Connected to MongoDB'))
   .catch((error) => console.error('❌ Error:', error.message));

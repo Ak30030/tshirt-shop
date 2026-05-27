@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import "./Productspage.css";
 import{useNavigate} from "react-router-dom";
+import { useCart } from "../context/useCart";
 
 const API = "/api";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate();
+  const { cartCount } = useCart();
   const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -54,10 +56,12 @@ export default function ProductsPage() {
             DICES<span>HUB</span>
           </div>
           <div className="nav-links">
-            <button className="nav-link">Home</button>
+            <button className="nav-link" onClick ={() => navigate("/")}>Home</button>
             <button className="nav-link active">Shop</button>
-            <button className="nav-link">About</button>
-            <button className="nav-cart">Cart (0)</button>
+            <button className="nav-link" onClick={() => navigate('/profile')}>My Account</button>
+            <button className="nav-cart" onClick={() => navigate('/cart')}>
+              Cart ({cartCount})
+            </button>
           </div>
         </nav>
       
@@ -140,7 +144,7 @@ export default function ProductsPage() {
                   <div className="product-footer">
                     <div className="product-price">₵{product.price.toFixed(2)}</div>
                     <div className="product-sizes">
-                      {product.sizes?.slice(0, 3).map((size) => (
+                      {product.sizes?.slice(0, 6).map((size) => (
                         <span key={size} className="size-tag">
                           {size}
                         </span>

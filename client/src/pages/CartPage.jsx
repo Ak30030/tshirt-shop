@@ -52,8 +52,8 @@ export default function CartPage() {
                   <img className="item-image" src={item.image} alt={item.name} />
                   <div className="items-details">
                     <div className="item-name">{item.name}</div>
-                    <div className="item-meta">
-                      Size: <span>{item.size}</span> · Color: <span>{item.color}</span>
+                    <div className="item-meta">size:
+                      {item.size}
                     </div>
                     <div className="item-price">₵{item.price.toFixed(2)}</div>
                     <div className="item-actions">
@@ -106,22 +106,24 @@ export default function CartPage() {
                 <span>₵{cartTotal.toFixed(2)}</span>
               </div>
               <div className="summary-row">
-                <span>Shipping</span>
-                <span>{cartTotal > 210 ? 'Free' : '₵5.99'}</span>
+                <span>delivery fee</span>
+                <span>{cartTotal > 210 ? 'Free' : '₵10.00'}</span>
               </div>
 
               <div className="summary-divider"></div>
 
               <div className="summary-total">
                 <span>Total</span>
-                <span>₵{(cartTotal > 210 ? cartTotal : cartTotal + 15).toFixed(2)}</span>
+                <span>₵{(cartTotal > 210 ? cartTotal : cartTotal + 10).toFixed(2)}</span>
               </div>
 
               {cartTotal > 210 && (
-                <div className="shipping-note">Add ₵{(210 - cartTotal).toFixed(2)} more for free shipping!</div>
+                <div className="shipping-note"> free delivery!</div>
               )}
 
-              <button className="checkout-btn">Proceed to Checkout</button>
+              <button className="checkout-btn" onClick={() => navigate('/checkout')}>
+                Proceed to Checkout
+              </button>
               <button className="continue-btn" onClick={() => navigate('/products')}>
                 Continue Shopping
               </button>

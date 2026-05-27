@@ -1,11 +1,15 @@
 import { useState } from "react";
 import "./AuthPages.css";
+import {useNavigate} from "react-router-dom";
+
 
 export default function AuthPages() {
+  const navigate = useNavigate();
   const [tab, setTab] = useState('login');
   const [form, setForm] = useState({ firstName: '', lastName: '', email: '', password: '', confirmPassword: '' });
   const [message, setMessage] = useState(null);
   const [loading, setLoading] = useState(false);
+  
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -89,7 +93,7 @@ export default function AuthPages() {
         <div className="auth-left">
           <div className="brand">
             <div className="brand-label">T-SHIRT PAPA FIE</div>
-            <div className="brand-name">DICES<span>HUB</span></div>
+            <div className="brand-name" onClick={() => navigate("/")}>DICES<span>HUB</span></div>
           </div>
 
           <div className="left-middle">

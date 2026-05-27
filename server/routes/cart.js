@@ -37,7 +37,7 @@ router.post("/add", authMiddleware, async (req, res) => {
   console.log('Cart add body:', req.body);
   console.log('Cart add headers:', req.headers);
   try {
-    const { productId, name, price, image, size, color, quantity } = req.body;
+    const { productId, name, price, image, size, quantity } = req.body;
     let cart = await Cart.findOne({ userId: req.user.id });
     if (!cart) {
       cart = await Cart.create({ userId: req.user.id, items: [] });
@@ -50,7 +50,7 @@ router.post("/add", authMiddleware, async (req, res) => {
     if (existingItem) {
       existingItem.quantity += quantity;
     } else {
-      cart.items.push({ productId, name, price, image, size, color, quantity });
+      cart.items.push({ productId, name, price, image, size, quantity });
     }
 
     await cart.save();

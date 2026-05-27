@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminPage.css";
 
-const EMPTY_FROM = {name:"",description:"",price:"",category:"",image:"",sizes:"",colors:"",stock:""};
+const EMPTY_FROM = {name:"",description:"",price:"",category:"",image:"",sizes:"",stock:""};
 
 export default function AdminPage() {
   const navigate = useNavigate();
@@ -65,8 +65,7 @@ export default function AdminPage() {
       price: product.price,
       category: product.category,
       image: product.image,
-      sizes: Array.isArray(product.sizes) ? product.sizes.join(", ") : product.sizes,
-      colors: Array.isArray(product.colors) ? product.colors.join(", ") : product.colors,
+      sizes: Array.isArray(product.sizes) ? product.sizes.join(", ") : product.sizes || "",
       stock: product.stock
     });
     setshowModal(true);
@@ -86,7 +85,6 @@ export default function AdminPage() {
         price: parseFloat(form.price),
         stock: parseInt(form.stock),
         sizes: form.sizes.split(",").map(s => s.trim()).filter(Boolean),
-        colors: form.colors.split(",").map(c => c.trim()).filter(Boolean),
       };
 
       const url = editProduct ? `/api/products/${editProduct._id}` : `/api/products`;
@@ -328,7 +326,7 @@ export default function AdminPage() {
             <div className="form-row">
             <div className="field">
             <label>Sizes (comma separated)</label>
-            <input name="sizes" value={form.sizes} onChange={handleChange} placeholder="S, M, L, XL" />
+            <input name="sizes" value={form.sizes} onChange={handleChange} placeholder="S, M, L, XL,XXL,XXXL" />
             </div>
             </div>
             </div>

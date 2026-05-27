@@ -12,7 +12,6 @@ const products = [
     image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500",
     category: "basics",
     sizes: ["S", "M", "L", "XL"],
-    colors: ["white"],
     stock: 100
   },
   {
@@ -22,7 +21,6 @@ const products = [
     image: "https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=500",
     category: "graphic",
     sizes: ["S", "M", "L", "XL"],
-    colors: ["black"],
     stock: 80
   },
   {
@@ -32,7 +30,6 @@ const products = [
     image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=500",
     category: "polo",
     sizes: ["M", "L", "XL"],
-    colors: ["navy"],
     stock: 60
   },
   {
@@ -42,7 +39,6 @@ const products = [
     image: "https://images.unsplash.com/photo-1562157873-818bc0726f68?w=500",
     category: "basics",
     sizes: ["S", "M", "L"],
-    colors: ["white", "blue"],
     stock: 120
   },
   {
@@ -52,7 +48,6 @@ const products = [
     image: "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=500",
     category: "vintage",
     sizes: ["S", "M", "L", "XL"],
-    colors: ["red"],
     stock: 50
   },
   {
@@ -62,7 +57,6 @@ const products = [
     image: "https://images.unsplash.com/photo-1554568218-0f1715e72254?w=500",
     category: "oversized",
     sizes: ["M", "L", "XL", "XXL"],
-    colors: ["grey"],
     stock: 90
   },
 ];

@@ -13,7 +13,10 @@ export default defineConfig({
         '/auth': {
         target: 'http://localhost:5000',
         changeOrigin: true,
-        
+        },
+        '/orders': {
+        target: 'http://localhost:5000',
+        changeOrigin: true,
       }
     }
   }

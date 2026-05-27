@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { CartContext } from "./cart-context";
+import { createContext, useContext, } from "react";
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
@@ -14,7 +15,7 @@ export function CartProvider({ children }) {
   
 
 
-  const addToCart = async (product, size, color) => {
+  const addToCart = async (product, size,) => {
     const token = getToken();
     if (!token) {
       alert("Please login to add items to cart");
@@ -33,7 +34,6 @@ export function CartProvider({ children }) {
           price: product.price,
           image: product.image,
           size,
-          color,
           quantity: 1
         })
       });
@@ -124,4 +124,7 @@ export function CartProvider({ children }) {
       {children}
     </CartContext.Provider>
   );
+}
+export function useCart() {
+  return useContext(CartContext);
 }
