@@ -23,7 +23,7 @@ const orderSchema = new mongoose.Schema({
       region: { type: String },
   },
   momoNumber: { type: String },
-  status: { type: String, enum: ['pending', 'paid', 'shipped', 'delivered', 'cancelled'], default: 'pending' }
+  status: { type: String, enum: ['pending','confirmed', 'shipped', 'delivered', 'cancelled'], default: 'pending' }
 }, { timestamps: true });
 
 export default mongoose.model('Order', orderSchema

@@ -516,3 +516,63 @@
     .admin-stats { grid-template-columns: repeat(2, 1fr); }
     .form-row { grid-template-columns: 1fr; }
   }
+  /* ADMIN TABS */
+.admin-tabs {
+  display: flex;
+  border-bottom: 1px solid #333;
+  background: #1a1a1a;
+  padding: 0 48px;
+}
+
+.admin-tab {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #666;
+  background: none;
+  border: none;
+  padding: 16px 24px;
+  cursor: pointer;
+  position: relative;
+  transition: color 0.2s;
+}
+
+.admin-tab:hover { color: #f5f0e8; }
+.admin-tab.active { color: #b8966e; }
+.admin-tab.active::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 2px;
+  background: #b8966e;
+}
+
+/* ORDERS */
+.order-filters {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 16px;
+}
+
+.empty-orders {
+  text-align: center;
+  padding: 48px;
+  color: #999;
+  font-style: italic;
+  font-size: 17px;
+}
+
+.status-select {
+  padding: 6px 10px;
+  border: 1px solid #ddd5c5;
+  background: #faf7f2;
+  font-family: 'Crimson Text', serif;
+  font-size: 14px;
+  color: #1a1a1a;
+  cursor: pointer;
+  outline: none;
+}
+
+.status-select:focus { border-color: #b8966e; }
