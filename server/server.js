@@ -3,9 +3,9 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js';
-import productRoutes from './routes/Products.js';
-import cartRoutes from './routes/Cart.js';
-import orderRoutes from './routes/Orders.js';
+import productRoutes from './routes/products.js';
+import cartRoutes from './routes/cart.js';
+import orderRoutes from './routes/orders.js';
 
 
 dotenv.config();
