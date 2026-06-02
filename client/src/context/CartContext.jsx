@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { CartContext } from "./cart-context";
-import { createContext, useContext, } from "react";
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
@@ -9,7 +8,7 @@ export function CartProvider({ children }) {
   const getToken = () =>{
     const token = localStorage.getItem("token");
     if(!token) return null;
-    return token.replace(/[^\x00-\x7F]/g, "");
+    return Array.from(token).filter(ch => ch.charCodeAt(0) <= 127).join("");
   };
 
   
@@ -125,6 +124,4 @@ export function CartProvider({ children }) {
     </CartContext.Provider>
   );
 }
-export function useCart() {
-  return useContext(CartContext);
-}
+// `useCart` hook is provided from `useCart.js` to avoid exporting non-component values

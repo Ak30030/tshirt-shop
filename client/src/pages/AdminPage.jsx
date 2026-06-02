@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import "./AdminPage.css";
 
@@ -7,7 +7,6 @@ const EMPTY_FROM = { name: "", description: "", price: "", category: "", image: 
 export default function AdminPage() {
   const navigate = useNavigate();
   const [products, setProducts] = useState([]);
-  const [filtered, setFiltered] = useState([]);
   const [loading, setLoading] = useState(true);
   const [message, setMessage] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -23,20 +22,19 @@ export default function AdminPage() {
   const token = localStorage.getItem('token');
   const isAdmin = user?.isAdmin;
 
-  const fetchProducts = async () => {
+  const fetchProducts = useCallback(async () => {
     try {
       const res = await fetch('/api/products');
       const data = await res.json();
       setProducts(data);
-      setFiltered(data);
     } catch (error) {
       console.error("Error fetching products:", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
-  const fetchOrders = async () => {
+  const fetchOrders = useCallback(async () => {
     setOrdersLoading(true);
     try {
       const res = await fetch('/api/orders', {
@@ -51,22 +49,21 @@ export default function AdminPage() {
     } finally {
       setOrdersLoading(false);
     }
-  };
+  }, [token]);
 
   useEffect(() => {
-    fetchProducts();
-    fetchOrders();
-  }, []);
+    (async () => {
+      await fetchProducts();
+      await fetchOrders();
+    })();
+  }, [fetchProducts, fetchOrders]);
 
-  useEffect(() => {
-    if (search.trim() === "") {
-      setFiltered(products);
-    } else {
-      setFiltered(products.filter(p =>
-        p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.category.toLowerCase().includes(search.toLowerCase())
-      ));
-    }
+  const filtered = useMemo(() => {
+    if (search.trim() === "") return products;
+    return products.filter(p =>
+      p.name.toLowerCase().includes(search.toLowerCase()) ||
+      p.category.toLowerCase().includes(search.toLowerCase())
+    );
   }, [search, products]);
 
   const handleUpdateStatus = async (orderId, newStatus) => {

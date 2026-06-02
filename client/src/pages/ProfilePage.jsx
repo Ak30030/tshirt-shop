@@ -28,7 +28,7 @@ export default function ProfilePage() {
       }
     };
     fetchOrders();
-  }, []);
+  }, [navigate, token]);
 
   const handleLogout = () => {
     localStorage.removeItem("token");
