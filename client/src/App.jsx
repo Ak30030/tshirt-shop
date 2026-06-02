@@ -4,7 +4,7 @@ import AuthPages from "./pages/AuthPages.jsx";
 import ProductsPage from "./pages/ProductsPage.jsx";
 import ProductDetailPage from "./pages/ProductDetailPage.jsx";
 import CartPage from "./pages/CartPage.jsx";
-import AdminPage from "./pages/Adminpage.jsx";
+import AdminPage from "./pages/AdminPage.jsx";
 import CheckoutPage from "./pages/Checkoutpage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 
