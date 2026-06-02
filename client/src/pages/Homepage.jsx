@@ -319,7 +319,7 @@ export default function HomePage() {
                 <img src="https://i.ibb.co/p6LCsS41/whatsapp-1.jpg" alt="whatsapp" width="20" />
                 Whatsapp
               </a>
-              <a href="https://whatsapp/akwasifredrico10"
+              <a href="www.tiktok.com/@fredrico107"
               target="_blank"rel="noopener noreferrer"
               >
                 <img src="https://i.ibb.co/4R2V8P2P/tiktok.jpg" alt="whatsapp" width="20" />
