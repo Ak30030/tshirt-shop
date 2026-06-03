@@ -40,7 +40,7 @@ export default function AuthPages() {
       setMessage({ type: 'success', text: `Welcome back ${data.user.name}!` });
 
       setTimeout(() => {
-        window.location.href = "/products";
+        navigate('/');
       }, 1000);
 
     } catch (error) {
