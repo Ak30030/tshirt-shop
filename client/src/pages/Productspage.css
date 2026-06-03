@@ -8,6 +8,7 @@ html, body {
 }
 
 .products-root {
+  max-height: 60vh;
   background: #f5f0e8;
   font-family: 'Crimson Text', serif;
   display: flex;
