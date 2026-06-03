@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./AuthPages.css";
 import {useNavigate} from "react-router-dom";
+import api from "../utils/api";
 
 
 export default function AuthPages() {
@@ -23,7 +24,7 @@ export default function AuthPages() {
     }
     setLoading(true);
     try {
-      const response = await fetch(`/auth/login`, {
+      const response = await api(`/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email: form.email, password: form.password }),
@@ -60,7 +61,7 @@ export default function AuthPages() {
     }
     setLoading(true);
     try {
-      const response = await fetch(`/auth/register`, {
+      const response = await api(`/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

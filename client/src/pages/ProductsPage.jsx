@@ -2,8 +2,7 @@ import { useState, useEffect } from "react";
 import "./Productspage.css";
 import{useNavigate} from "react-router-dom";
 import { useCart } from "../context/useCart";
-
-const API = "/api";
+import api from "../utils/api";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -20,7 +19,7 @@ export default function ProductsPage() {
     const fetchProducts = async () => {
       try {
         console.log("Fetching products...");
-        const response = await fetch(`${API}/products`);
+        const response = await api(`/products`);
         console.log("Response:", response);
         if (!response.ok) throw new Error("Failed to fetch products");
         const data = await response.json();

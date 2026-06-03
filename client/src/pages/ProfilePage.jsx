@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './ProfilePage.css';
+import api from '../utils/api';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export default function ProfilePage() {
     if (!token) { navigate('/'); return; }
     const fetchOrders = async () => {
       try {
-        const res = await fetch('/orders/myorders', {
+        const res = await api('/orders/myorders', {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to fetch orders');

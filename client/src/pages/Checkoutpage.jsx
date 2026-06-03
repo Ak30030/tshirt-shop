@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/useCart";
 import './Checkoutpage.css';
+import api from "../utils/api";
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -63,7 +64,7 @@ console.log('Token:', token);
     if (err) { setError(err); return; }
     setLoading(true);
     try {
-      const res = await fetch('/orders', {
+      const res = await api('/orders', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

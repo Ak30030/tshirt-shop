@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/useCart";
+import api from "../utils/api";
 import "./Homepage.css";
 
 export default function HomePage() {
@@ -14,7 +15,7 @@ export default function HomePage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await fetch('/api/products');
+        const res = await api('/api/products');
         const data = await res.json();
         setProducts(data.slice(0, 3));
       } catch (error) {
