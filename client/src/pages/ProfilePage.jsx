@@ -16,7 +16,7 @@ export default function ProfilePage() {
     if (!token) { navigate('/'); return; }
     const fetchOrders = async () => {
       try {
-        const res = await api('/orders/myorders', {
+        const res = await api('/api/orders/myorders', {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (!res.ok) throw new Error('Failed to fetch orders');

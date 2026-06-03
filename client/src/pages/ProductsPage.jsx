@@ -19,7 +19,7 @@ export default function ProductsPage() {
     const fetchProducts = async () => {
       try {
         console.log("Fetching products...");
-        const response = await api(`/products`);
+        const response = await api(`/api/products`);
         console.log("Response:", response);
         if (!response.ok) throw new Error("Failed to fetch products");
         const data = await response.json();

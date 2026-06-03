@@ -25,7 +25,7 @@ export default function AdminPage() {
 
   const fetchProducts = useCallback(async () => {
     try {
-      const res = await api(`/products`);
+      const res = await api(`/api/products`);
       const data = await res.json();
       setProducts(data);
     } catch (error) {
@@ -38,7 +38,7 @@ export default function AdminPage() {
   const fetchOrders = useCallback(async () => {
     setOrdersLoading(true);
     try {
-      const res = await api(`/orders`, {
+      const res = await api(`/api/orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -71,7 +71,7 @@ export default function AdminPage() {
     console.log('updating order:',orderId,'to', newStatus);
     console.log('Token:',token);
     try {
-      const res = await api(`/orders/${orderId}`, {
+      const res = await api(`/api/orders/${orderId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
