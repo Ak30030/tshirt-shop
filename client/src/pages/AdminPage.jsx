@@ -25,7 +25,7 @@ export default function AdminPage() {
 
   const fetchProducts = useCallback(async () => {
     try {
-      const res = await api(`/api/products`);
+      const res = await api(`/products`);
       const data = await res.json();
       setProducts(data);
     } catch (error) {
@@ -38,7 +38,7 @@ export default function AdminPage() {
   const fetchOrders = useCallback(async () => {
     setOrdersLoading(true);
     try {
-      const res = await api(`/api/orders`, {
+      const res = await api(`/orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -71,7 +71,7 @@ export default function AdminPage() {
     console.log('updating order:',orderId,'to', newStatus);
     console.log('Token:',token);
     try {
-      const res = await api(`/api/orders/${orderId}`, {
+      const res = await api(`/orders/${orderId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -127,7 +127,7 @@ export default function AdminPage() {
         stock: parseInt(form.stock),
         sizes: form.sizes.split(',').map(s => s.trim()).filter(Boolean),
       };
-      const urlPath = editProduct ? `/api/products/${editProduct._id}` : `/api/products`;
+      const urlPath = editProduct ? `/products/${editProduct._id}` : `/products`;
       const method = editProduct ? 'PUT' : 'POST';
       const res = await api(urlPath, {
         method,
@@ -148,7 +148,7 @@ export default function AdminPage() {
   const handleDelete = async (id) => {
     if (!window.confirm('Are you sure you want to delete this product?')) return;
     try {
-      const res = await api(`/api/products/${id}`, {
+      const res = await api(`/products/${id}`, {
         method: 'DELETE',
         headers: { Authorization: `Bearer ${token}` }
       });

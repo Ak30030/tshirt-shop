@@ -22,7 +22,7 @@ export function CartProvider({ children }) {
       return;
     }
     try {
-      const res = await api(`/api/cart/add`, {
+      const res = await api(`/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -48,7 +48,7 @@ export function CartProvider({ children }) {
   const removeFromCart = async (itemId) => {
     const token = getToken();
     try {
-      const res = await api(`/api/cart/remove/${itemId}`, {
+      const res = await api(`/cart/remove/${itemId}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -62,7 +62,7 @@ export function CartProvider({ children }) {
   const updateQuantity = async (itemId, quantity) => {
     const token = getToken();
     try {
-      const res = await api(`/api/cart/update/${itemId}`, {
+      const res = await api(`/cart/update/${itemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -80,7 +80,7 @@ export function CartProvider({ children }) {
   const clearCart = async () => {
     const token = getToken();
     try {
-      await api(`/api/cart/clear`, {
+      await api(`/cart/clear`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -100,7 +100,7 @@ export function CartProvider({ children }) {
     const doFetch = async () => {
       try {
         setLoading(true);
-        const res = await api(`/api/cart`, {
+        const res = await api(`/cart`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         const data = await res.json();

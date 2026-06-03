@@ -64,7 +64,7 @@ console.log('Token:', token);
     if (err) { setError(err); return; }
     setLoading(true);
     try {
-      const res = await api('/api/orders', {
+      const res = await api('/orders', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
