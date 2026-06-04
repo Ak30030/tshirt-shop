@@ -220,7 +220,7 @@ export default function AuthPages() {
                 <button className="social-btn" onClick={handleGoogleLogin} disabled={loading}>
                   𝐆 Google
                 </button>
-                <button className="social-btn">𝐅 Facebook</button>
+                
               </div>
 
               <div className="switch-text">
