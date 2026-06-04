@@ -1,3 +1,5 @@
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider } from "../utils/firebase";
 import { useState } from "react";
 import "./AuthPages.css";
 import {useNavigate} from "react-router-dom";
@@ -81,6 +83,34 @@ export default function AuthPages() {
       setLoading(false);
     }
   };
+  const handleGoogleLogin = async () => {
+  setLoading(true);
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    const user = result.user;
+    const idToken = await user.getIdToken();
+
+    const response = await api("/auth/google", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ idToken }),
+    });
+
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.message || "Google login failed");
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    setMessage({ type: "success", text: `Welcome ${data.user.name}!` });
+    setTimeout(() => navigate("/"), 1000);
+
+  } catch (error) {
+    setMessage({ type: "error", text: error.message });
+  } finally {
+    setLoading(false);
+  }
+};
 
   const switchTab = (nextTab) => {
     setTab(nextTab);
@@ -187,7 +217,9 @@ export default function AuthPages() {
               <div className="divider">or continue with</div>
 
               <div className="social-btns">
-                <button className="social-btn">𝐆 Google</button>
+                <button className="social-btn" onClick={handleGoogleLogin} disabled={loading}>
+                  𝐆 Google
+                </button>
                 <button className="social-btn">𝐅 Facebook</button>
               </div>
 
