@@ -314,7 +314,7 @@ export default function HomePage() {
                 Facebook
               </a>
 
-              <a href="https://whatsapp/akwasifredrico10"
+              <a href="https://wa.me/message/PERAJ3PP6CUZH1"
               target="_blank"rel="noopener noreferrer"
               >
                 <img src="https://i.ibb.co/p6LCsS41/whatsapp-1.jpg" alt="whatsapp" width="20" />
