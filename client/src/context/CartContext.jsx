@@ -17,10 +17,10 @@ export function CartProvider({ children }) {
 
   const addToCart = async (product, size,) => {
     const token = getToken();
-    if (!token) {
-      alert("Please login to add items to cart");
-      return;
-    }
+    //if (!token) {
+      //alert("Please login to add items to cart");
+      //return;
+    //}
     try {
       const res = await api(`/cart/add`, {
         method: "POST",

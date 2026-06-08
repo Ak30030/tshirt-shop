@@ -109,6 +109,11 @@ export default function CheckoutPage() {
   };
 
   const handlePlaceOrder = async () => {
+    if(!token) {
+      alert("Please login to complete your order");
+      navigate('/login');
+      return;
+    }
     const err = validateStep2();
     if (err) { setError(err); return; }
 
