@@ -116,14 +116,9 @@
 .hero-pattern {
   position: absolute;
   inset: 0;
-  background-image:
-    repeating-linear-gradient(
-      45deg,
-      transparent,
-      transparent 60px,
-      rgb(255, 255, 255) 60px,
-      rgba(255, 250, 244, 0.727) 61px
-    );
+  background:
+    white 1px, transparent 1px,
+    white 2px, transparent 2px,
 }
 
 .hero-content {
