@@ -132,7 +132,9 @@ export default function ProductsPage() {
                       e.target.src = "https://via.placeholder.com/400x500?text=T-Shirt";
                     }}
                   />
-                  <div className="product-badge">{product.badge}</div>
+                  {product.badge && (
+                    <div className="product-badge">{product.badge}</div>
+                  )}
                   <div className="product-overlay">Add to Cart</div>
                 </div>
 
