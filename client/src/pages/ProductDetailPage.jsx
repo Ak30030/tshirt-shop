@@ -105,17 +105,16 @@ export default function ProductDetailPage() {
             {/* SIZES */}
             <div className="detail-section">
               <div className="detail-label">Select Size</div>
-              <div className="detail-sizes">
-                {product?.sizes?.map((size) => (
-                  <button
-                    key={size}
-                    className={`size-button ${selectedSize === size ? "selected" : ""}`}
-                    onClick={() => setSelectedSize(size)}
-                  >
-                    {size}
-                  </button>
-                ))}
-              </div>
+             <select
+              className="size-dropdown"
+              value={selectedSize}
+              onChange={(e) => setSelectedSize(e.target.value)}
+            >
+              <option value="">-- Select Size --</option>
+              {product.sizes.map((size) => (
+                <option key={size} value={size}>{size}</option>
+              ))}
+             </select>
             </div>
 
             <div className="detail-divider"></div>
