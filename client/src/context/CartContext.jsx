@@ -23,19 +23,27 @@ export function CartProvider({ children }) {
   const getToken = () => {
     const token = localStorage.getItem("token");
     if (!token) return null;
-    return Array.from(token).filter(ch => ch.charCodeAt(0) <= 127).join("");
+    const cleaned = Array.from(token).filter(ch => ch.charCodeAt(0) <= 127).join("");
+    return cleaned.length > 0 ? cleaned : null;
   };
 
-  const isLoggedIn = () => !!getToken();
+  const isLoggedIn = () => {
+    const token = getToken();
+    return !!token && token.length > 10;
+  };
 
   // ─── ADD TO CART ───────────────────────────────────────────
   const addToCart = async (product, size) => {
     if (!isLoggedIn()) {
+    const token = getToken();
+      if(!token || token.length < 10) {
       // Guest: save to localStorage
       const guestCart = getGuestCart();
       const existing = guestCart.find(
         (item) => item.productId === product._id && item.size === size
+      
       );
+    }
       if (existing) {
         existing.quantity += 1;
       } else {
