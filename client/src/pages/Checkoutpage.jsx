@@ -133,17 +133,17 @@ export default function CheckoutPage() {
     }
   };
 
-  if (!token) {
-    return (
-      <div className="checkout-root">
-        <div className="checkout-denied">
-          <div className="denied-title">Please Login</div>
-          <div className="denied-sub">You need to be logged in to checkout</div>
-          <button className="denied-btn" onClick={() => navigate('/')}>Go to Login</button>
-        </div>
-      </div>
-    );
-  }
+ // if (!token) {
+    //return (
+      //<div className="checkout-root">
+        //<div className="checkout-denied">
+          //<div className="denied-title">Please Login</div>
+          //<div className="denied-sub">You need to be logged in to checkout</div>
+         // <button className="denied-btn" onClick={() => navigate('/')}>Go to Login</button>
+       // </div>
+      //</div>
+   // );
+  //}
 
   if (cart.length === 0 && step !== 3) {
     return (
