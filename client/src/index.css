@@ -113,3 +113,8 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+h3, h4, h5, h6 {
+  font-family: var(--sans);
+  font-weight: 600;
+  color: var(--text-h);
+}
