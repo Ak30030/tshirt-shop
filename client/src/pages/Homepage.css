@@ -4,7 +4,7 @@
 
 .home-root {
   min-height: 100vh;
-  background: #f5f0e8;
+  background: #faf7f2;
   font-family: 'Crimson Text', serif;
   overflow-x: hidden;
 }
@@ -16,14 +16,14 @@
   left: 0;
   right: 0;
   z-index: 100;
-  background: rgba(26, 26, 26, 0.95);
+  background: rgba(26, 26, 26, 0.97);
   backdrop-filter: blur(10px);
   padding: 0 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 68px;
-  border-bottom: 1px solid rgba(184, 150, 110, 0.2);
+  border-bottom: 1px solid rgba(184, 150, 110, 0.3);
 }
 
 .nav-brand {
@@ -104,20 +104,27 @@
 .hero-bg {
   position: absolute;
   inset: 0;
-  background: #1a1a1a;
 }
 
 .hero-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #1a1a1a 0%, #2d2415 50%, #1a1a1a 100%);
+  background: linear-gradient(
+    135deg,
+    #1a1208 0%,
+    #2d1f0e 30%,
+    #3a2510 55%,
+    #2a1c0c 75%,
+    #1a1208 100%
+  );
 }
 
 .hero-pattern {
   position: absolute;
   inset: 0;
-  background-color: white;
-
+  background-image:
+    radial-gradient(ellipse at 70% 50%, rgba(184, 150, 110, 0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 20% 80%, rgba(184, 150, 110, 0.08) 0%, transparent 50%);
 }
 
 .hero-content {
@@ -162,7 +169,7 @@
 
 .hero-desc {
   font-size: 19px;
-  color: #888;
+  color: #b0a898;
   line-height: 1.7;
   margin-bottom: 40px;
   font-style: italic;
@@ -197,8 +204,8 @@
 .hero-secondary {
   padding: 16px 32px;
   background: none;
-  border: 1px solid rgba(255,255,255,0.2);
-  color: #888;
+  border: 1px solid rgba(245, 240, 232, 0.25);
+  color: #a09888;
   font-family: 'Cormorant Garamond', serif;
   font-size: 13px;
   letter-spacing: 3px;
@@ -227,14 +234,14 @@
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #666;
+  color: #7a6e62;
   margin-top: 2px;
 }
 
 .stat-divider {
   width: 1px;
   height: 40px;
-  background: rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.12);
 }
 
 .hero-scroll {
@@ -650,7 +657,7 @@
 
 /* CTA SECTION */
 .cta-section {
-  background: #f5f0e8;
+  background: linear-gradient(135deg, #f5f0e8 0%, #ede5d8 100%);
   padding: 80px 48px;
   text-align: center;
   border-top: 1px solid #e8e0d0;
@@ -676,7 +683,7 @@
 
 .cta-sub {
   font-size: 17px;
-  color: #999;
+  color: #7a6e62;
   font-style: italic;
   margin-bottom: 32px;
   max-width: 500px;
@@ -741,7 +748,6 @@
   display: flex;
   flex-direction: column;
   gap: 12px;
-  text-decoration: none;
 }
 
 .footer-col-title {
@@ -752,8 +758,6 @@
   color: #b8966e;
   margin-bottom: 4px;
 }
-
-
 
 .footer-col button, .footer-col span {
   background: none;
@@ -780,7 +784,6 @@
   font-size: 12px;
   letter-spacing: 1px;
   color: #555;
-
 }
 
 /* RESPONSIVE */
@@ -841,9 +844,3 @@
   border-radius: 4px;
   object-fit: cover;
 }
-
-
-
-
-
-
