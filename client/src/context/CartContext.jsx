@@ -35,21 +35,17 @@ export function CartProvider({ children }) {
   // ─── ADD TO CART ───────────────────────────────────────────
   const addToCart = async (product, size) => {
     if (!isLoggedIn()) {
-    const token = getToken();
-      if(!token || token.length < 10) {
       // Guest: save to localStorage
       const guestCart = getGuestCart();
-      const existing = guestCart.find(
+      const existingIndex = guestCart.findIndex(
         (item) => item.productId === product._id && item.size === size
-      
       );
-    }
-      if (existing) {
-        existing.quantity += 1;
+      if (existingIndex !== -1) {
+        guestCart[existingIndex].quantity += 1;
       } else {
         guestCart.push({
           productId: product._id,
-          _id: product._id + size, // temp id
+          _id: product._id + size,
           name: product.name,
           price: product.price,
           image: product.image,
@@ -177,15 +173,14 @@ export function CartProvider({ children }) {
         console.error("Error syncing guest cart:", err);
       }
     }
-    localStorage.removeItem(GUEST_CART_KEY); // clear guest cart after sync
+    localStorage.removeItem(GUEST_CART_KEY);
   };
 
-  // ─── LOAD CART ON MOUNT 
+  // ─── LOAD CART ON MOUNT ────────────────────────────────────
   useEffect(() => {
     const token = getToken();
 
     if (!token) {
-      // Load guest cart from localStorage
       setCart(getGuestCart());
       return;
     }
@@ -193,7 +188,6 @@ export function CartProvider({ children }) {
     const doFetch = async () => {
       try {
         setLoading(true);
-        // Sync any guest items first
         await syncGuestCartToBackend();
 
         const res = await api(`/cart`, {
