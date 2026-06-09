@@ -118,7 +118,7 @@ export default function ProductsPage() {
           <div className="products-grid">
             {filtered.map((product, index) => (
               <div
-                className="products-card"
+                className="product-card"
                 key={product._id}
                 style={{ animationDelay: `${index * 0.1}ms` }}
                 onClick={() => navigate(`/products/${product._id}`)}
@@ -132,9 +132,7 @@ export default function ProductsPage() {
                       e.target.src = "https://via.placeholder.com/400x500?text=T-Shirt";
                     }}
                   />
-                  {product.badge && (
-                    <div className="product-badge">{product.badge}</div>
-                  )}
+                  <div className="product-badge">{product.badge}</div>
                   <div className="product-overlay">Add to Cart</div>
                 </div>
 

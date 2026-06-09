@@ -118,7 +118,7 @@
   height: 500px;
   overflow-clip-margin: content-box;
   overflow: clip;
-  background: transparent;
+  background: #f0ebe0;
   flex-shrink: stretch;
 }
 

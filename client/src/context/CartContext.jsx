@@ -2,69 +2,31 @@ import { useState, useEffect } from "react";
 import { CartContext } from "./cart-context";
 import api from "../utils/api";
 
-const GUEST_CART_KEY = "guest_cart";
-
-const getGuestCart = () => {
-  try {
-    return JSON.parse(localStorage.getItem(GUEST_CART_KEY)) || [];
-  } catch {
-    return [];
-  }
-};
-
-const saveGuestCart = (cart) => {
-  localStorage.setItem(GUEST_CART_KEY, JSON.stringify(cart));
-};
-
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const getToken = () => {
+  const getToken = () =>{
     const token = localStorage.getItem("token");
-    if (!token) return null;
-    const cleaned = Array.from(token).filter(ch => ch.charCodeAt(0) <= 127).join("");
-    return cleaned.length > 0 ? cleaned : null;
+    if(!token) return null;
+    return Array.from(token).filter(ch => ch.charCodeAt(0) <= 127).join("");
   };
 
-  const isLoggedIn = () => {
+  
+
+
+  const addToCart = async (product, size,) => {
     const token = getToken();
-    return !!token && token.length > 10;
-  };
-
-  // ─── ADD TO CART ───────────────────────────────────────────
-  const addToCart = async (product, size) => {
-    if (!isLoggedIn()) {
-      // Guest: save to localStorage
-      const guestCart = getGuestCart();
-      const existingIndex = guestCart.findIndex(
-        (item) => item.productId === product._id && item.size === size
-      );
-      if (existingIndex !== -1) {
-        guestCart[existingIndex].quantity += 1;
-      } else {
-        guestCart.push({
-          productId: product._id,
-          _id: product._id + size,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-          size,
-          quantity: 1
-        });
-      }
-      saveGuestCart(guestCart);
-      setCart([...guestCart]);
-      return;
-    }
-
-    // Logged in: save to backend
+    //if (!token) {
+      //alert("Please login to add items to cart");
+      //return;
+    //}
     try {
       const res = await api(`/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({
           productId: product._id,
@@ -76,24 +38,19 @@ export function CartProvider({ children }) {
         })
       });
       const data = await res.json();
+      console.log('Add to cart response:', data);
       setCart(Array.isArray(data.items) ? data.items : []);
     } catch (err) {
       console.error("Error adding to cart:", err);
     }
   };
 
-  // ─── REMOVE FROM CART ──────────────────────────────────────
   const removeFromCart = async (itemId) => {
-    if (!isLoggedIn()) {
-      const updated = getGuestCart().filter(item => item._id !== itemId);
-      saveGuestCart(updated);
-      setCart(updated);
-      return;
-    }
+    const token = getToken();
     try {
       const res = await api(`/cart/remove/${itemId}`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${getToken()}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
       setCart(Array.isArray(data.items) ? data.items : []);
@@ -102,22 +59,14 @@ export function CartProvider({ children }) {
     }
   };
 
-  // ─── UPDATE QUANTITY ───────────────────────────────────────
   const updateQuantity = async (itemId, quantity) => {
-    if (!isLoggedIn()) {
-      const guestCart = getGuestCart().map(item =>
-        item._id === itemId ? { ...item, quantity } : item
-      );
-      saveGuestCart(guestCart);
-      setCart(guestCart);
-      return;
-    }
+    const token = getToken();
     try {
       const res = await api(`/cart/update/${itemId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${getToken()}`
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify({ quantity })
       });
@@ -128,17 +77,12 @@ export function CartProvider({ children }) {
     }
   };
 
-  // ─── CLEAR CART ────────────────────────────────────────────
   const clearCart = async () => {
-    if (!isLoggedIn()) {
-      localStorage.removeItem(GUEST_CART_KEY);
-      setCart([]);
-      return;
-    }
+    const token = getToken();
     try {
       await api(`/cart/clear`, {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${getToken()}` }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setCart([]);
     } catch (err) {
@@ -146,50 +90,16 @@ export function CartProvider({ children }) {
     }
   };
 
-  // ─── SYNC GUEST CART → BACKEND ON LOGIN ───────────────────
-  const syncGuestCartToBackend = async () => {
-    const guestCart = getGuestCart();
-    if (guestCart.length === 0) return;
+  const cartCount = Array.isArray(cart) ? cart.reduce((total, item) => total + item.quantity, 0) : 0;
+  const cartTotal = Array.isArray(cart) ? cart.reduce((total, item) => total + item.price * item.quantity, 0) : 0;
 
-    const token = getToken();
-    for (const item of guestCart) {
-      try {
-        await api(`/cart/add`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            productId: item.productId,
-            name: item.name,
-            price: item.price,
-            image: item.image,
-            size: item.size,
-            quantity: item.quantity
-          })
-        });
-      } catch (err) {
-        console.error("Error syncing guest cart:", err);
-      }
-    }
-    localStorage.removeItem(GUEST_CART_KEY);
-  };
-
-  // ─── LOAD CART ON MOUNT ────────────────────────────────────
   useEffect(() => {
     const token = getToken();
-
-    if (!token) {
-      setCart(getGuestCart());
-      return;
-    }
+    if (!token) return;
 
     const doFetch = async () => {
       try {
         setLoading(true);
-        await syncGuestCartToBackend();
-
         const res = await api(`/cart`, {
           headers: { Authorization: `Bearer ${token}` }
         });
@@ -206,14 +116,6 @@ export function CartProvider({ children }) {
     doFetch();
   }, []);
 
-  const cartCount = Array.isArray(cart)
-    ? cart.reduce((total, item) => total + item.quantity, 0)
-    : 0;
-
-  const cartTotal = Array.isArray(cart)
-    ? cart.reduce((total, item) => total + item.price * item.quantity, 0)
-    : 0;
-
   return (
     <CartContext.Provider value={{
       cart, loading, cartCount, cartTotal,
@@ -223,3 +125,4 @@ export function CartProvider({ children }) {
     </CartContext.Provider>
   );
 }
+// `useCart` hook is provided from `useCart.js` to avoid exporting non-component values
