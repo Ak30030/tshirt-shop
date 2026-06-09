@@ -55,6 +55,20 @@
 body {
   margin: 0;
   padding: 0;
+  font-family: var(--sans);
+}
+
+body,
+p,
+span,
+a,
+li,
+label,
+button,
+input,
+textarea,
+select {
+  font-family: var(--sans);
 }
 
 #root {
@@ -104,6 +118,15 @@ code,
   font-family: var(--mono);
   display: inline-flex;
   border-radius: 4px;
+  color: var(--text-h);
+}
+
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--heading);
+  font-weight: 500;
   color: var(--text-h);
 }
 
