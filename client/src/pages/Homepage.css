@@ -123,7 +123,7 @@
   font-size: 11px;
   letter-spacing: 5px;
   text-transform: uppercase;
-  color: #b8966e;
+  color: #000000;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
@@ -134,7 +134,7 @@
   content: '';
   width: 40px;
   height: 1px;
-  background: #b8966e;
+  background: #000000;
 }
 
 .hero-title {
@@ -149,7 +149,7 @@
 
 .hero-title em {
   font-style: italic;
-  color: #b8966e;
+  color: #000000;
 }
 
 .hero-desc {
@@ -773,4 +773,8 @@
 
 .media-platform a:hover { color: #fff; }
 
-.media-platform a img { border-radius: 4px; object-fit: cover; }
+.media-platform a img { border-radius: 4px; object-fit: cover;
+ }
+ .footer-bottom{
+  color: #ffffff;
+ }
