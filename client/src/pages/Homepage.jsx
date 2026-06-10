@@ -99,7 +99,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="hero-image-container">
-          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=800&fit=crop" alt="Premium T-shirts" className="hero-image" />
+          <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=800&fit=crop" alt="Premium T-shirts" className="hero-image" />
         </div>
         <div className="hero-scroll">
           <div className="scroll-line"></div>
