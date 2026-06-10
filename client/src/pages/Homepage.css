@@ -90,7 +90,7 @@
   padding: 120px 80px 80px;
   overflow: hidden;
   background: #ffffff;
-  justify-content: space-between;
+  gap: 40px;
 }
 
 .hero-bg {
@@ -119,24 +119,15 @@
   max-width: 680px;
 }
 
-.hero-image-container {
+.hero-image {
   position: relative;
   z-index: 1;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-left: 60px;
-}
-
-.hero-image {
-  max-width: 100%;
+  max-width: 350px;
   height: auto;
-  max-height: 600px;
   object-fit: contain;
   opacity: 0.3;
-  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.2) 70%, rgba(0, 0, 0, 0) 100%);
-  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.2) 70%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0) 100%);
   animation: fadeInImage 1s ease-out;
 }
 
