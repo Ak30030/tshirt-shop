@@ -64,10 +64,11 @@ export default function HomePage() {
         <div className="hero-bg">
           <div className="hero-overlay"></div>
           <div className="hero-pattern"></div>
+          
         </div>
         <div className="hero-content">
           <div className="hero-eyebrow">New Collection 2026</div>
-          <h1 className="hero-title">
+          <h1 className="hero-wear">
             Wear What<br />
             <em>Speaks</em> For You
           </h1>
@@ -96,6 +97,9 @@ export default function HomePage() {
               <div className="stat-label">Fast Delivery</div>
             </div>
           </div>
+        </div>
+        <div className="hero-image-container">
+          <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600&h=800&fit=crop" alt="Premium T-shirts" className="hero-image" />
         </div>
         <div className="hero-scroll">
           <div className="scroll-line"></div>
