@@ -90,7 +90,6 @@
   padding: 120px 80px 80px;
   overflow: hidden;
   background: #ffffff;
-  gap: 40px;
 }
 
 .hero-bg {
@@ -117,18 +116,6 @@
   position: relative;
   z-index: 1;
   max-width: 680px;
-}
-
-.hero-image {
-  position: relative;
-  z-index: 1;
-  max-width: 350px;
-  height: auto;
-  object-fit: contain;
-  opacity: 0.3;
-  mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0) 100%);
-  -webkit-mask-image: linear-gradient(to right, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 50%, rgba(0, 0, 0, 0) 100%);
-  animation: fadeInImage 1s ease-out;
 }
 
 @keyframes fadeInImage {

@@ -98,7 +98,6 @@ export default function HomePage() {
             </div>
           </div>
         </div>
-        <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=600&fit=crop" alt="Premium T-shirts" className="hero-image" />
         <div className="hero-scroll">
           <div className="scroll-line"></div>
           <span>Scroll</span>
