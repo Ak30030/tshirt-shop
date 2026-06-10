@@ -123,7 +123,7 @@
   font-size: 11px;
   letter-spacing: 5px;
   text-transform: uppercase;
-  color: #000000;
+  color: #111;
   margin-bottom: 20px;
   display: flex;
   align-items: center;
@@ -134,7 +134,7 @@
   content: '';
   width: 40px;
   height: 1px;
-  background: #000000;
+  background: #111;
 }
 
 .hero-title {
@@ -149,15 +149,15 @@
 
 .hero-title em {
   font-style: italic;
-  color: #000000;
+  color: #b8966e;
 }
 
 .hero-desc {
   font-size: 19px;
-  color: #040404;
+  color: #666;
   line-height: 1.7;
   margin-bottom: 40px;
-  font-style: san;
+  font-style: italic;
   max-width: 500px;
 }
 
@@ -166,7 +166,7 @@
 .hero-cta {
   padding: 16px 36px;
   background: #111;
-  color: #f6f6f6;
+  color: #fff;
   border: none;
   font-family: 'Cormorant Garamond', serif;
   font-size: 13px;
@@ -187,7 +187,7 @@
   padding: 16px 32px;
   background: none;
   border: 1px solid #ccc;
-  color: #000000;
+  color: #666;
   font-family: 'Cormorant Garamond', serif;
   font-size: 13px;
   letter-spacing: 3px;
@@ -212,7 +212,7 @@
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #000000;
+  color: #bbb;
   margin-top: 2px;
 }
 
@@ -236,7 +236,7 @@
 .scroll-line {
   width: 1px;
   height: 48px;
-  background: linear-gradient(to bottom, #010101, transparent);
+  background: linear-gradient(to bottom, #b8966e, transparent);
   animation: scrollPulse 2s ease-in-out infinite;
 }
 
@@ -250,7 +250,7 @@
   font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #000000;
+  color: #bbb;
   writing-mode: vertical-rl;
 }
 
@@ -283,7 +283,7 @@
 
 .feature-sub {
   font-size: 13px;
-  color: #000000;
+  color: #aaa;
   font-style: italic;
   margin-top: 2px;
 }
@@ -502,11 +502,11 @@
   margin-bottom: 24px;
 }
 
-.about-title em { font-style: italic; color: #000000; }
+.about-title em { font-style: italic; color: #b8966e; }
 
 .about-text {
   font-size: 17px;
-  color: #000000;
+  color: #999;
   line-height: 1.8;
   font-style: italic;
   margin-bottom: 16px;
@@ -614,7 +614,7 @@
   font-size: 11px;
   letter-spacing: 5px;
   text-transform: uppercase;
-  color: #000000;
+  color: #b8966e;
   margin-bottom: 16px;
 }
 
@@ -628,7 +628,7 @@
 
 .cta-sub {
   font-size: 17px;
-  color: #000000;
+  color: #888;
   font-style: italic;
   margin-bottom: 32px;
   max-width: 500px;
@@ -649,7 +649,7 @@
   transition: all 0.3s;
 }
 
-.cta-btn:hover { background: #000000; color: #fff; transform: translateY(-2px); }
+.cta-btn:hover { background: #b8966e; color: #fff; transform: translateY(-2px); }
 
 /* FOOTER */
 .home-footer {
@@ -773,8 +773,7 @@
 
 .media-platform a:hover { color: #fff; }
 
-.media-platform a img { border-radius: 4px; object-fit: cover;
- }
- .footer-bottom{
+.media-platform a img { border-radius: 4px; object-fit: cover; }
+.footer-bottom{
   color: #ffffff;
- }
+}
