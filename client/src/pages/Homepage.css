@@ -136,8 +136,7 @@
   height: 1px;
   background: #111;
 }
-
-.hero-title {
+.hero title {
   font-family: 'Playfair Display', serif;
   font-size: 76px;
   font-weight: 700;
@@ -147,7 +146,22 @@
   letter-spacing: -1px;
 }
 
-.hero-title em {
+.hero-wear em {
+  font-style: italic;
+  color: #b8966e;
+}
+
+.hero-wear {
+  font-family: 'Playfair Display', serif;
+  font-size: 76px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.05;
+  margin-bottom: 24px;
+  letter-spacing: -1px;
+}
+
+.hero-wear em {
   font-style: italic;
   color: #b8966e;
 }
