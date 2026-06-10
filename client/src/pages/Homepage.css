@@ -14,21 +14,21 @@
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.97);
+  background: rgba(26, 18, 8, 0.97);
   backdrop-filter: blur(12px);
   padding: 0 48px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 68px;
-  border-bottom: 1px solid #ece8e0;
+  border-bottom: 1px solid rgba(184, 150, 110, 0.25);
 }
 
 .nav-brand {
   font-family: 'Playfair Display', serif;
   font-size: 24px;
   font-weight: 700;
-  color: #111;
+  color: #f5f0e8;
   letter-spacing: -0.5px;
 }
 
@@ -41,14 +41,14 @@
   font-size: 12px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #aaa;
+  color: #b8966e;
   background: none;
   border: none;
   cursor: pointer;
   transition: color 0.2s;
 }
 
-.nav-link:hover, .nav-link.active { color: #111; }
+.nav-link:hover, .nav-link.active { color: #f5f0e8; }
 
 .nav-actions { display: flex; gap: 16px; align-items: center; }
 
@@ -57,29 +57,29 @@
   font-size: 12px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #111;
+  color: #b8966e;
   background: none;
-  border: 1px solid #111;
+  border: 1px solid #b8966e;
   padding: 8px 16px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
-.nav-cart:hover { background: #111; color: #fff; }
+.nav-cart:hover { background: #b8966e; color: #1a1208; }
 
 .nav-logout, .nav-signin {
   font-family: 'Cormorant Garamond', serif;
   font-size: 12px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #aaa;
+  color: #b8966e;
   background: none;
   border: none;
   cursor: pointer;
   transition: color 0.2s;
 }
 
-.nav-logout:hover, .nav-signin:hover { color: #111; }
+.nav-logout:hover, .nav-signin:hover { color: #f5f0e8; }
 
 /* HERO */
 .hero {
