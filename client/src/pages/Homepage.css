@@ -154,7 +154,7 @@
 
 .hero-desc {
   font-size: 19px;
-  color: #666;
+  color: #040404;
   line-height: 1.7;
   margin-bottom: 40px;
   font-style: italic;
@@ -212,7 +212,7 @@
   font-size: 11px;
   letter-spacing: 2px;
   text-transform: uppercase;
-  color: #bbb;
+  color: #000000;
   margin-top: 2px;
 }
 
@@ -236,7 +236,7 @@
 .scroll-line {
   width: 1px;
   height: 48px;
-  background: linear-gradient(to bottom, #b8966e, transparent);
+  background: linear-gradient(to bottom, #010101, transparent);
   animation: scrollPulse 2s ease-in-out infinite;
 }
 
@@ -250,7 +250,7 @@
   font-size: 10px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: #bbb;
+  color: #000000;
   writing-mode: vertical-rl;
 }
 
@@ -283,7 +283,7 @@
 
 .feature-sub {
   font-size: 13px;
-  color: #aaa;
+  color: #000000;
   font-style: italic;
   margin-top: 2px;
 }
@@ -502,11 +502,11 @@
   margin-bottom: 24px;
 }
 
-.about-title em { font-style: italic; color: #b8966e; }
+.about-title em { font-style: italic; color: #000000; }
 
 .about-text {
   font-size: 17px;
-  color: #999;
+  color: #000000;
   line-height: 1.8;
   font-style: italic;
   margin-bottom: 16px;
@@ -614,7 +614,7 @@
   font-size: 11px;
   letter-spacing: 5px;
   text-transform: uppercase;
-  color: #b8966e;
+  color: #000000;
   margin-bottom: 16px;
 }
 
@@ -628,7 +628,7 @@
 
 .cta-sub {
   font-size: 17px;
-  color: #888;
+  color: #000000;
   font-style: italic;
   margin-bottom: 32px;
   max-width: 500px;
@@ -649,7 +649,7 @@
   transition: all 0.3s;
 }
 
-.cta-btn:hover { background: #b8966e; color: #fff; transform: translateY(-2px); }
+.cta-btn:hover { background: #000000; color: #fff; transform: translateY(-2px); }
 
 /* FOOTER */
 .home-footer {
