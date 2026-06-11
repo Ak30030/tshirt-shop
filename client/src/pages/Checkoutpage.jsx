@@ -25,23 +25,23 @@ export default function CheckoutPage() {
     notes: ''
   });
 
-  const getToken = () =>{
+  const getToken = () => {
     const token = localStorage.getItem("token");
-    if(!token) return null;
+    if (!token) return null;
     const cleaned = Array.from(token).filter(ch => ch.charCodeAt(0) <= 127).join("");
-    return cleaned.length > 0 ? cleaned : null; // Basic check to ensure it's a valid token
+    return cleaned.length > 0 ? cleaned : null;
   };
+
   const token = getToken();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const deliveryFee = form.deliveryMethod === 'pickup' ? 0 : (cartTotal > 210 ? 0 : 15);
   const totalAmount = cartTotal + deliveryFee;
 
-  // Paystack config
   const paystackConfig = {
     reference: new Date().getTime().toString(),
     email: user.email,
-    amount: Math.round(totalAmount * 100), // Paystack uses pesewas
+    amount: Math.round(totalAmount * 100),
     currency: "GHS",
     publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
   };
@@ -74,15 +74,14 @@ export default function CheckoutPage() {
     setError(null);
   };
 
-  // Save order to backend after payment
   const saveOrder = async (reference) => {
     setLoading(true);
     try {
       const res = await api('/orders', {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",...(token &&
-          {Authorization: `Bearer ${token}`})
+          "Content-Type": "application/json",
+          ...(token && { Authorization: `Bearer ${token}` })
         },
         body: JSON.stringify({
           items: cart,
@@ -115,43 +114,23 @@ export default function CheckoutPage() {
   };
 
   const handlePlaceOrder = async () => {
-    if(!token) {
-      alert("Please login to complete your order");
-      setTimeout(() => {
-        navigate('/login');
-      }, 1000);
+    if (!token) {
+      setError("Please login to complete your order. Redirecting to login...");
+      setTimeout(() => navigate('/login'), 2000);
       return;
     }
     const err = validateStep2();
     if (err) { setError(err); return; }
 
     if (form.paymentMethod === 'momo') {
-      // Open Paystack popup
       initializePayment({
-        onSuccess: (response) => {
-          saveOrder(response.reference);
-        },
-        onClose: () => {
-          setError('Payment was cancelled. Please try again.');
-        }
+        onSuccess: (response) => saveOrder(response.reference),
+        onClose: () => setError('Payment was cancelled. Please try again.')
       });
     } else {
-      // Cash on delivery — save order directly
       saveOrder(null);
     }
   };
-
- // if (!token) {
-    //return (
-      //<div className="checkout-root">
-        //<div className="checkout-denied">
-          //<div className="denied-title">Please Login</div>
-          //<div className="denied-sub">You need to be logged in to checkout</div>
-         // <button className="denied-btn" onClick={() => navigate('/')}>Go to Login</button>
-       // </div>
-      //</div>
-   // );
-  //}
 
   if (cart.length === 0 && step !== 3) {
     return (
@@ -305,7 +284,7 @@ export default function CheckoutPage() {
                   </div>
                 </div>
                 {form.paymentMethod === 'momo' && (
-                  <div className="field full" style={{ marginTop: '20px' }}>
+                  <div className="field full" style={{ marginTop: '8px' }}>
                     <label>Mobile Money Number</label>
                     <input name="momoNumber" value={form.momoNumber} onChange={handleChange} placeholder="0XX XXX XXXX" />
                   </div>
