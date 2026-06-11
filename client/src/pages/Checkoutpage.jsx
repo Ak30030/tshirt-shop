@@ -25,7 +25,13 @@ export default function CheckoutPage() {
     notes: ''
   });
 
-  const token = localStorage.getItem("token");
+  const getToken = () =>{
+    const token = localStorage.getItem("token");
+    if(!token) return null;
+    const cleaned = Array.from(token).filter(ch => ch.charCodeAt(0) <= 127).join("");
+    return cleaned.length > 0 ? cleaned : null; // Basic check to ensure it's a valid token
+  };
+  const token = getToken();
   const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   const deliveryFee = form.deliveryMethod === 'pickup' ? 0 : (cartTotal > 210 ? 0 : 15);
@@ -75,8 +81,8 @@ export default function CheckoutPage() {
       const res = await api('/orders', {
         method: "POST",
         headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
+          "Content-Type": "application/json",...(token &&
+          {Authorization: `Bearer ${token}`})
         },
         body: JSON.stringify({
           items: cart,
@@ -111,7 +117,9 @@ export default function CheckoutPage() {
   const handlePlaceOrder = async () => {
     if(!token) {
       alert("Please login to complete your order");
-      navigate('/login');
+      setTimeout(() => {
+        navigate('/login');
+      }, 1000);
       return;
     }
     const err = validateStep2();
