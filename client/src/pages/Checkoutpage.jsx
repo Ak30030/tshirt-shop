@@ -1,351 +1,332 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/useCart";
-import { usePaystackPayment } from "react-paystack";
-import './Checkoutpage.css';
 import api from "../utils/api";
+import "./Homepage.css";
 
-export default function CheckoutPage() {
+export default function HomePage() {
   const navigate = useNavigate();
-  const { cart, cartTotal, clearCart } = useCart();
-  const [step, setStep] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [order, setOrder] = useState(null);
+  const { cartCount } = useCart();
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const user = JSON.parse(localStorage.getItem("user") || '{}');
+  const token = localStorage.getItem("token");
 
-  const [form, setForm] = useState({
-    fullName: '',
-    phone: '',
-    address: '',
-    city: '',
-    region: '',
-    deliveryMethod: 'delivery',
-    paymentMethod: 'cash',
-    momoNumber: '',
-    notes: ''
-  });
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await api('/products');
+        const data = await res.json();
+        setProducts(data.slice(0, 3));
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProducts();
+  }, []);
 
-  const getToken = () =>{
-    const token = localStorage.getItem("token");
-    if(!token) return null;
-    const cleaned = Array.from(token).filter(ch => ch.charCodeAt(0) <= 127).join("");
-    return cleaned.length > 0 ? cleaned : null; // Basic check to ensure it's a valid token
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    navigate('/');
   };
-  const token = getToken();
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-
-  const deliveryFee = form.deliveryMethod === 'pickup' ? 0 : (cartTotal > 210 ? 0 : 15);
-  const totalAmount = cartTotal + deliveryFee;
-
-  // Paystack config
-  const paystackConfig = {
-    reference: new Date().getTime().toString(),
-    email: user.email,
-    amount: Math.round(totalAmount * 100), // Paystack uses pesewas
-    currency: "GHS",
-    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
-  };
-
-  const initializePayment = usePaystackPayment(paystackConfig);
-
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-    setError(null);
-  };
-
-  const validateStep1 = () => {
-    if (!form.fullName) return 'Please enter your full name';
-    if (!form.phone) return 'Please enter your phone number';
-    if (form.deliveryMethod === 'delivery' && !form.address) return 'Please enter your delivery address';
-    if (form.deliveryMethod === 'delivery' && !form.city) return 'Please enter your city';
-    if (form.deliveryMethod === 'delivery' && !form.region) return 'Please select your region';
-    return null;
-  };
-
-  const validateStep2 = () => {
-    if (form.paymentMethod === 'momo' && !form.momoNumber) return 'Please enter your Momo number';
-    return null;
-  };
-
-  const handleNext = () => {
-    const err = validateStep1();
-    if (err) { setError(err); return; }
-    setStep(2);
-    setError(null);
-  };
-
-  // Save order to backend after payment
-  const saveOrder = async (reference) => {
-    setLoading(true);
-    try {
-      const res = await api('/orders', {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",...(token &&
-          {Authorization: `Bearer ${token}`})
-        },
-        body: JSON.stringify({
-          items: cart,
-          totalAmount,
-          paymentMethod: form.paymentMethod,
-          deliveryMethod: form.deliveryMethod,
-          deliveryAddress: {
-            fullName: form.fullName,
-            phone: form.phone,
-            address: form.address,
-            city: form.city,
-            region: form.region
-          },
-          momoNumber: form.momoNumber,
-          notes: form.notes,
-          paystackReference: reference || null,
-          paymentStatus: reference ? 'paid' : 'pending'
-        })
-      });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.message || 'Failed to place order');
-      setOrder(data.order);
-      await clearCart();
-      setStep(3);
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handlePlaceOrder = async () => {
-    if(!token) {
-      alert("Please login to complete your order");
-      setTimeout(() => {
-        navigate('/login');
-      }, 1000);
-      return;
-    }
-    const err = validateStep2();
-    if (err) { setError(err); return; }
-
-    if (form.paymentMethod === 'momo') {
-      // Open Paystack popup
-      initializePayment({
-        onSuccess: (response) => {
-          saveOrder(response.reference);
-        },
-        onClose: () => {
-          setError('Payment was cancelled. Please try again.');
-        }
-      });
-    } else {
-      // Cash on delivery — save order directly
-      saveOrder(null);
-    }
-  };
-
- // if (!token) {
-    //return (
-      //<div className="checkout-root">
-        //<div className="checkout-denied">
-          //<div className="denied-title">Please Login</div>
-          //<div className="denied-sub">You need to be logged in to checkout</div>
-         // <button className="denied-btn" onClick={() => navigate('/')}>Go to Login</button>
-       // </div>
-      //</div>
-   // );
-  //}
-
-  if (cart.length === 0 && step !== 3) {
-    return (
-      <div className="checkout-root">
-        <div className="checkout-denied">
-          <div className="denied-title">Your Cart is Empty</div>
-          <div className="denied-sub">Add some products before checking out</div>
-          <button className="denied-btn" onClick={() => navigate('/products')}>Browse Products</button>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="checkout-root">
-      <nav className="checkout-nav">
-        <div className="nav-brand" onClick={() => navigate('/products')}>DICES<span>HUB</span></div>
-        <div className="nav-steps">
-          <div className={`step ${step >= 1 ? 'active' : ''}`}>
-            <div className="step-num">1</div>
-            <div className="step-label">Delivery</div>
-          </div>
-          <div className="step-line"></div>
-          <div className={`step ${step >= 2 ? 'active' : ''}`}>
-            <div className="step-num">2</div>
-            <div className="step-label">Payment</div>
-          </div>
-          <div className="step-line"></div>
-          <div className={`step ${step >= 3 ? 'active' : ''}`}>
-            <div className="step-num">3</div>
-            <div className="step-label">Confirmed</div>
-          </div>
+    <div className="home-root">
+
+      {/* NAVBAR */}
+      <nav className="home-nav">
+        <div className="nav-brand">DICES<span>HUB</span></div>
+        <div className="nav-links">
+          <button className="nav-link active">Home</button>
+          <button className="nav-link" onClick={() => navigate('/products')}>Shop</button>
+          <button className="nav-link" onClick={() => navigate('/profile')}>My Account</button>
+          {user?.isAdmin && (
+            <button className="nav-link" onClick={() => navigate("/admin")}>Admin</button>
+          )}
+        </div>
+        <div className="nav-actions">
+          {token ? (
+            <>
+              <button className="nav-cart" onClick={() => navigate("/cart")}>Cart ({cartCount})</button>
+              <button className="nav-logout" onClick={handleLogout}>Logout</button>
+            </>
+          ) : (
+            <button className="nav-signin" onClick={() => navigate('/login')}>Sign In</button>
+          )}
         </div>
       </nav>
 
-      {step === 3 && (
-        <div className="confirmed-wrap">
-          <div className="confirmed-card">
-            <div className="confirmed-icon">✅</div>
-            <h1 className="confirmed-title">Order Placed!</h1>
-            <p className="confirmed-sub">Thank you for your purchase. We will contact you shortly.</p>
-            {order && (
-              <div className="confirmed-details">
-                <div className="confirmed-row">
-                  <span>Order ID</span>
-                  <span>#{order._id.slice(-8).toUpperCase()}</span>
-                </div>
-                <div className="confirmed-row">
-                  <span>Payment</span>
-                  <span>{order.paymentMethod === 'cash' ? 'Cash on Delivery' : 'Mobile Money (Paystack)'}</span>
-                </div>
-                <div className="confirmed-row">
-                  <span>Delivery</span>
-                  <span>{order.deliveryMethod === 'delivery' ? 'Home Delivery' : 'Store Pickup'}</span>
-                </div>
-                <div className="confirmed-row total">
-                  <span>Total</span>
-                  <span>₵{order.totalAmount.toFixed(2)}</span>
-                </div>
-              </div>
-            )}
-            <div className="confirmed-btns">
-              <button className="primary-btn" onClick={() => navigate('/products')}>Continue Shopping</button>
+      {/* HERO SECTION */}
+      <section className="hero">
+        <div className="hero-bg">
+          <div className="hero-overlay"></div>
+          <div className="hero-pattern"></div>
+        </div>
+
+        {/* T-SHIRT IMAGE RIGHT SIDE */}
+        <div className="hero-image-right">
+          <img
+            src="/tshirt-hero.jpg"
+            alt="T-shirts collection"
+            className="hero-tshirt-img"
+          />
+        </div>
+
+        <div className="hero-content">
+          <div className="hero-eyebrow">New Collection 2026</div>
+          <h1 className="hero-title">
+            Wear What<br />
+            <em>Speaks</em> For You
+          </h1>
+          <p className="hero-desc">
+            Premium t-shirts crafted for those who appreciate quality, comfort, and timeless style. Made from 100% cotton.
+          </p>
+          <div className="hero-btns">
+            <button className="hero-cta" onClick={() => navigate("/products")}>Shop Collection</button>
+            <button className="hero-secondary" onClick={() => {
+              document.getElementById('about').scrollIntoView({ behavior: 'smooth' });
+            }}>Our Story</button>
+          </div>
+          <div className="hero-stats">
+            <div className="stat">
+              <div className="stat-number">500+</div>
+              <div className="stat-label">Happy Customers</div>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat">
+              <div className="stat-number">100%</div>
+              <div className="stat-label">Pure Cotton</div>
+            </div>
+            <div className="stat-divider"></div>
+            <div className="stat">
+              <div className="stat-number">48hr</div>
+              <div className="stat-label">Fast Delivery</div>
             </div>
           </div>
         </div>
-      )}
+        <div className="hero-scroll">
+          <div className="scroll-line"></div>
+          <span>Scroll</span>
+        </div>
+      </section>
 
-      {step !== 3 && (
-        <div className="checkout-layout">
-          <div className="checkout-form-wrap">
-            {step === 1 && (
-              <div className="form-section">
-                <div className="section-eyebrow">Step 1 of 2</div>
-                <h2 className="section-title">Delivery Information</h2>
-                {error && <div className="error-msg">{error}</div>}
-                <div className="method-selector">
-                  <div className="method-label">Delivery Method</div>
-                  <div className="method-options">
-                    <div className={`method-card ${form.deliveryMethod === 'delivery' ? 'active' : ''}`} onClick={() => setForm({ ...form, deliveryMethod: 'delivery' })}>
-                      <div className="method-name">Home Delivery</div>
-                      <div className="method-sub">Delivered to your doorstep</div>
-                    </div>
-                    <div className={`method-card ${form.deliveryMethod === 'pickup' ? 'active' : ''}`} onClick={() => setForm({ ...form, deliveryMethod: 'pickup' })}>
-                      <div className="method-name">Store Pickup</div>
-                      <div className="method-sub">Pick up from our shop</div>
-                    </div>
-                  </div>
-                </div>
-                <div className="form-grid">
-                  <div className="field full">
-                    <label>Full Name</label>
-                    <input name="fullName" value={form.fullName} onChange={handleChange} placeholder="Enter your full name" />
-                  </div>
-                  <div className="field full">
-                    <label>Phone Number</label>
-                    <input name="phone" value={form.phone} onChange={handleChange} placeholder="0XX XXX XXXX" />
-                  </div>
-                  {form.deliveryMethod === 'delivery' && (
-                    <>
-                      <div className="field full">
-                        <label>Delivery Address</label>
-                        <input name="address" value={form.address} onChange={handleChange} placeholder="Street address, house number" />
-                      </div>
-                      <div className="field">
-                        <label>City</label>
-                        <input name="city" value={form.city} onChange={handleChange} placeholder="Kumasi" />
-                      </div>
-                      <div className="field">
-                        <label>Region</label>
-                        <select name="region" value={form.region} onChange={handleChange}>
-                          <option value="">Select Region</option>
-                          <option>Ashanti</option>
-                          <option>Greater Accra</option>
-                          <option>Eastern</option>
-                          <option>Western</option>
-                          <option>Central</option>
-                          <option>Volta</option>
-                          <option>Brong-Ahafo</option>
-                          <option>Northern</option>
-                          <option>Upper East</option>
-                          <option>Upper West</option>
-                        </select>
-                      </div>
-                    </>
-                  )}
-                  <div className="field full">
-                    <label>Order Notes (Optional)</label>
-                    <textarea name="notes" value={form.notes} onChange={handleChange} placeholder="Any special instructions..." />
-                  </div>
-                </div>
-                <button className="next-btn" onClick={handleNext}>Continue to Payment →</button>
-              </div>
-            )}
-
-            {step === 2 && (
-              <div className="form-section">
-                <div className="section-eyebrow">Step 2 of 2</div>
-                <h2 className="section-title">Payment Method</h2>
-                {error && <div className="error-msg">{error}</div>}
-                <div className="method-selector">
-                  <div className="method-options">
-                    <div className={`method-card ${form.paymentMethod === 'cash' ? 'active' : ''}`} onClick={() => setForm({ ...form, paymentMethod: 'cash' })}>
-                      <div className="method-name">Cash on Delivery</div>
-                      <div className="method-sub">Pay with cash upon delivery</div>
-                    </div>
-                    <div className={`method-card ${form.paymentMethod === 'momo' ? 'active' : ''}`} onClick={() => setForm({ ...form, paymentMethod: 'momo' })}>
-                      <div className="method-name">Mobile Money</div>
-                      <div className="method-sub">MTN / TELECEL via Paystack</div>
-                    </div>
-                  </div>
-                </div>
-                {form.paymentMethod === 'momo' && (
-                  <div className="field full" style={{ marginTop: '20px' }}>
-                    <label>Mobile Money Number</label>
-                    <input name="momoNumber" value={form.momoNumber} onChange={handleChange} placeholder="0XX XXX XXXX" />
-                  </div>
-                )}
-                <div className="step2-btns">
-                  <button className="back-btn" onClick={() => setStep(1)}>← Back</button>
-                  <button className="place-btn" onClick={handlePlaceOrder} disabled={loading}>
-                    {loading ? 'Placing Order...' : form.paymentMethod === 'momo' ? 'Pay with Paystack' : 'Place Order'}
-                  </button>
-                </div>
-              </div>
-            )}
+      {/* FEATURES STRIP */}
+      <section className="features-strip">
+        <div className="feature-item">
+          <span className="feature-icon">🚚</span>
+          <div>
+            <div className="feature-title">Free Delivery</div>
+            <div className="feature-sub">On orders over ₵210</div>
           </div>
+        </div>
+        <div className="feature-divider"></div>
+        <div className="feature-item">
+          <span className="feature-icon">✨</span>
+          <div>
+            <div className="feature-title">Premium Quality</div>
+            <div className="feature-sub">100% pure cotton fabric</div>
+          </div>
+        </div>
+        <div className="feature-divider"></div>
+        <div className="feature-item">
+          <span className="feature-icon">💳</span>
+          <div>
+            <div className="feature-title">Easy Payment</div>
+            <div className="feature-sub">Cash & Mobile Money</div>
+          </div>
+        </div>
+        <div className="feature-divider"></div>
+        <div className="feature-item">
+          <span className="feature-icon">🇬🇭</span>
+          <div>
+            <div className="feature-title">Made for Ghana</div>
+            <div className="feature-sub">Proudly local business</div>
+          </div>
+        </div>
+      </section>
 
-          <div className="checkout-summary">
-            <div className="summary-title">Order Summary</div>
-            <div className="summary-items">
-              {cart.map(item => (
-                <div className="summary-item" key={item._id}>
-                  <img className="summary-img" src={item.image} alt={item.name} onError={e => { e.target.src = 'https://via.placeholder.com/60x70?text=T'; }} />
-                  <div className="summary-item-details">
-                    <div className="summary-item-name">{item.name}</div>
-                    <div className="summary-item-meta">Size: {item.size} · Qty: {item.quantity}</div>
-                    <div className="summary-item-price">₵{(item.price * item.quantity).toFixed(2)}</div>
+      {/* FEATURED SECTION */}
+      <section className="featured-section">
+        <div className="section-header">
+          <div className="section-eyebrow">Hand Picked</div>
+          <h2 className="section-title">Featured Collection</h2>
+          <p className="section-sub">Our most loved pieces, carefully selected for you</p>
+        </div>
+        {loading ? (
+          <div className="featured-loading">
+            <div className="spinner"></div>
+          </div>
+        ) : (
+          <div className="featured-grid">
+            {products.map((product, index) => (
+              <div
+                className="featured-card"
+                key={product._id}
+                style={{ animationDelay: `${index * 0.15}s` }}
+                onClick={() => navigate(`/products/${product._id}`)}
+              >
+                <div className="featured-img-wrap">
+                  <img
+                    className="featured-img"
+                    src={product.image}
+                    alt={product.name}
+                    onError={e => { e.target.src = "https://via.placeholder.com/400x500?text=T-Shirt"; }}
+                  />
+                  <div className="featured-overlay">
+                    <button className="view-btn">View Product</button>
                   </div>
+                  <div className="featured-badge">{product.category}</div>
                 </div>
-              ))}
+                <div className="featured-info">
+                  <div className="featured-category">{product.category}</div>
+                  <div className="featured-name">{product.name}</div>
+                  <div className="featured-price">₵{product.price.toFixed(2)}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        <div className="view-all-wrap">
+          <button className="view-all-btn" onClick={() => navigate("/products")}>
+            View Full Collection →
+          </button>
+        </div>
+      </section>
+
+      {/* ABOUT SECTION */}
+      <section className="about-section" id="about">
+        <div className="about-content">
+          <div className="about-left">
+            <div className="about-eyebrow">Our Story</div>
+            <h2 className="about-title">Designed With<br /><em>Passion</em></h2>
+            <p className="about-text">
+              DicesHub was born from a simple belief — that everyone deserves to wear
+              something that feels as good as it looks. We source only the finest cotton
+              fabrics and design it to bring you t-shirts that last.
+            </p>
+            <p className="about-text">
+              Based in Ghana, we are proud to serve customers across the country with
+              fast delivery and a personal touch. Every order is packed with care
+              and delivered with love.
+            </p>
+            <div className="about-values">
+              <div className="value-item">
+                <div className="value-icon">🌿</div>
+                <div>
+                  <div className="value-title">Sustainable</div>
+                  <div className="value-sub">Eco-friendly materials</div>
+                </div>
+              </div>
+              <div className="value-item">
+                <div className="value-icon">🇬🇭</div>
+                <div>
+                  <div className="value-title">Made for Ghana</div>
+                  <div className="value-sub">Proudly local business</div>
+                </div>
+              </div>
+              <div className="value-item">
+                <div className="value-icon">💎</div>
+                <div>
+                  <div className="value-title">Premium Quality</div>
+                  <div className="value-sub">Never compromise</div>
+                </div>
+              </div>
             </div>
-            <div className="summary-divider"></div>
-            <div className="summary-row"><span>Subtotal</span><span>₵{cartTotal.toFixed(2)}</span></div>
-            <div className="summary-row"><span>Delivery Fee</span><span>{deliveryFee === 0 ? 'Free' : '₵' + deliveryFee.toFixed(2)}</span></div>
-            <div className="summary-divider"></div>
-            <div className="summary-total"><span>Total</span><span>₵{totalAmount.toFixed(2)}</span></div>
-            {cartTotal < 210 && <div className="free-shipping-note">Add ₵{(210 - cartTotal).toFixed(2)} more for free delivery!</div>}
-            <div className="delivery-info">
-              {form.deliveryMethod === 'pickup' ? 'Store Pickup — No delivery fee' : deliveryFee === 0 ? 'Free delivery on this order!' : 'Delivery within 2-3 business days'}
+            <button className="about-btn" onClick={() => navigate("/products")}>Shop Now</button>
+          </div>
+          <div className="about-right">
+            <div className="about-img-wrap">
+              <div className="about-img-card card-1">
+                <img src="https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300" alt="t-shirt" />
+              </div>
+              <div className="about-img-card card-2">
+                <img src="https://images.unsplash.com/photo-1503341504253-dff4815485f1?w=300" alt="t-shirt" />
+              </div>
+              <div className="about-badge-float">
+                <div className="badge-number">100%</div>
+                <div className="badge-text">Cotton</div>
+              </div>
             </div>
           </div>
         </div>
-      )}
+      </section>
+
+      {/* CTA SECTION */}
+      <section className="cta-section">
+        <div className="cta-content">
+          <div className="cta-eyebrow">Limited Time</div>
+          <h2 className="cta-title">Free Delivery on Orders Over ₵210</h2>
+          <p className="cta-sub">Shop now and enjoy free delivery straight to your door anywhere in Ghana</p>
+          <button className="cta-btn" onClick={() => navigate("/products")}>Start Shopping</button>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer className="home-footer">
+        <div className="footer-content">
+          <div className="footer-brand">
+            <div className="footer-logo">DICES<span>HUB</span></div>
+            <div className="footer-tagline">T-shirt papa fie</div>
+          </div>
+          <div className="footer-links">
+            <div className="footer-col">
+              <div className="footer-col-title">Shop</div>
+              <button onClick={() => navigate("/products")}>All Products</button>
+              <button onClick={() => navigate("/cart")}>My Cart</button>
+              <button onClick={() => navigate("/profile")}>My Orders</button>
+            </div>
+            <div className="footer-col">
+              <div className="footer-col-title">Account</div>
+              {token ? (
+                <>
+                  <button onClick={() => navigate("/profile")}>My Profile</button>
+                  <button onClick={handleLogout}>Logout</button>
+                </>
+              ) : (
+                <button onClick={() => navigate("/login")}>Sign In / Register</button>
+              )}
+            </div>
+            <div className="media-platform">
+              <div className="social-media">Contact Us</div>
+              <a target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/qLW0G2fC/Location-address-position-icon-vector-in-trendy.jpg" alt="Location" width="20" />
+                Ghana, Atonso
+              </a>
+              <a target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/VpgV9SnC/971088738383504183.jpg" alt="Phone" width="20" />
+                0596863729
+              </a>
+              <a target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/NdMzM99H/803892602253735695-1.jpg" alt="Email" width="20" />
+                akwasifredrico10@gmail.com
+              </a>
+            </div>
+            <div className="media-platform">
+              <div className="social-media">Our Socials</div>
+              <a href="https://facebook.com/akwasifredrico10" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/tp97cpGq/facebook.jpg" alt="Facebook" width="20" />
+                Facebook
+              </a>
+              <a href="https://wa.me/message/PERAJ3PP6CUZH1" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/p6LCsS41/whatsapp-1.jpg" alt="WhatsApp" width="20" />
+                WhatsApp
+              </a>
+              <a href="https://www.tiktok.com/@fredrico107" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/4R2V8P2P/tiktok.jpg" alt="TikTok" width="20" />
+                TikTok
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="footer-bottom">
+          <span>© 2026 DicesHub. All rights reserved.</span>
+          <span>Made with ❤️ in Ghana</span>
+        </div>
+      </footer>
+
     </div>
   );
 }
