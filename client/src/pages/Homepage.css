@@ -160,18 +160,18 @@
 
 
 .hero-wear {
-  font-family: 'Playfair Display', serif;
-  font-size: 76px;
-  font-weight: 700;
-  color: #000;
-  line-height: 1.05;
-  margin-bottom: 24px;
-  letter-spacing: -1px;
+  font-family: 'Playfair Display', serif !important;
+  font-size: 76px !important;
+  font-weight: 700 !important;
+  color: #000 !important;
+  line-height: 1.05 !important;
+  margin-bottom: 24px !important;
+  letter-spacing: -1px  !important;
 }
 
 .hero-wear em {
-  font-style: italic;
-  color: #b8966e;
+  font-style: italic !important;  ;
+  color: #b8966e !important;
 }
 
 .hero-title {

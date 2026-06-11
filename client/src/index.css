@@ -134,3 +134,10 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+.hero-wear {
+  color: #111 !important;
+}
+
+.hero-wear em {
+  color: #b8966e !important;
+}
