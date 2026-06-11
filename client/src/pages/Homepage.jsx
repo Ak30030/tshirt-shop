@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/useCart";
 import api from "../utils/api";
 import "./Homepage.css";
-import tshirtImg from "../assets/tshirt-hero.jpg";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -65,14 +64,20 @@ export default function HomePage() {
         <div className="hero-bg">
           <div className="hero-overlay"></div>
           <div className="hero-pattern"></div>
-          
         </div>
-        <div className="hero-image-rigth">
-          <img src={tshirtImg} alt="T-shirts" className="hero-tshirt-img"/> 
+
+        {/* T-SHIRT IMAGE RIGHT SIDE */}
+        <div className="hero-image-right">
+          <img
+            src="/tshirt-hero.jpg"
+            alt="T-shirts collection"
+            className="hero-tshirt-img"
+          />
         </div>
+
         <div className="hero-content">
           <div className="hero-eyebrow">New Collection 2026</div>
-          <h1 className="hero-wear">
+          <h1 className="hero-title">
             Wear What<br />
             <em>Speaks</em> For You
           </h1>
@@ -111,7 +116,7 @@ export default function HomePage() {
       {/* FEATURES STRIP */}
       <section className="features-strip">
         <div className="feature-item">
-          <span className="feature-icon"></span>
+          <span className="feature-icon">🚚</span>
           <div>
             <div className="feature-title">Free Delivery</div>
             <div className="feature-sub">On orders over ₵210</div>
@@ -119,7 +124,7 @@ export default function HomePage() {
         </div>
         <div className="feature-divider"></div>
         <div className="feature-item">
-          <span className="feature-icon"></span>
+          <span className="feature-icon">✨</span>
           <div>
             <div className="feature-title">Premium Quality</div>
             <div className="feature-sub">100% pure cotton fabric</div>
@@ -127,7 +132,7 @@ export default function HomePage() {
         </div>
         <div className="feature-divider"></div>
         <div className="feature-item">
-          <span className="feature-icon"></span>
+          <span className="feature-icon">💳</span>
           <div>
             <div className="feature-title">Easy Payment</div>
             <div className="feature-sub">Cash & Mobile Money</div>
@@ -135,10 +140,10 @@ export default function HomePage() {
         </div>
         <div className="feature-divider"></div>
         <div className="feature-item">
-          <span className="feature-icon"></span>
+          <span className="feature-icon">🇬🇭</span>
           <div>
-            <div className="feature-title"></div>
-            <div className="feature-sub"></div>
+            <div className="feature-title">Made for Ghana</div>
+            <div className="feature-sub">Proudly local business</div>
           </div>
         </div>
       </section>
@@ -284,54 +289,35 @@ export default function HomePage() {
                 <button onClick={() => navigate("/login")}>Sign In / Register</button>
               )}
             </div>
-
-            
-             <div className="media-platform">
+            <div className="media-platform">
               <div className="social-media">Contact Us</div>
-              <a 
-              target="_blank"rel="noopener noreferrer"
-              >
-                <img src="https://i.ibb.co/qLW0G2fC/Location-address-position-icon-vector-in-trendy.jpg" alt="Facebook" width="20" />
-                Ghana,Atonso
+              <a target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/qLW0G2fC/Location-address-position-icon-vector-in-trendy.jpg" alt="Location" width="20" />
+                Ghana, Atonso
               </a>
-
-              <a 
-              target="_blank"rel="noopener noreferrer"
-              >
-                <img src="https://i.ibb.co/VpgV9SnC/971088738383504183.jpg" alt="whatsapp" width="20" />
+              <a target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/VpgV9SnC/971088738383504183.jpg" alt="Phone" width="20" />
                 0596863729
               </a>
-              <a 
-              target="_blank"rel="noopener noreferrer"
-              >
-                <img src="https://i.ibb.co/NdMzM99H/803892602253735695-1.jpg" alt="whatsapp" width="20" />
-                akwasifredrico10@gmail.com
+              <a target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/NdMzM99H/803892602253735695-1.jpg" alt="Email" width="20" />
+                diceshub@gmail.com
               </a>
-              
             </div>
-
-             <div className="media-platform">
-              <div className="social-media">Our socials</div>
-              <a href="https://facebook.com/akwasifredrico10"
-              target="_blank"rel="noopener noreferrer"
-              >
+            <div className="media-platform">
+              <div className="social-media">Follow Us</div>
+              <a href="https://facebook.com/akwasifredrico10" target="_blank" rel="noopener noreferrer">
                 <img src="https://i.ibb.co/tp97cpGq/facebook.jpg" alt="Facebook" width="20" />
                 Facebook
               </a>
-
-              <a href="https://wa.me/message/PERAJ3PP6CUZH1"
-              target="_blank"rel="noopener noreferrer"
-              >
-                <img src="https://i.ibb.co/p6LCsS41/whatsapp-1.jpg" alt="whatsapp" width="20" />
-                Whatsapp
+              <a href="https://wa.me/message/PERAJ3PP6CUZH1" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/p6LCsS41/whatsapp-1.jpg" alt="WhatsApp" width="20" />
+                WhatsApp
               </a>
-              <a href="www.tiktok.com/@fredrico107"
-              target="_blank"rel="noopener noreferrer"
-              >
-                <img src="https://i.ibb.co/4R2V8P2P/tiktok.jpg" alt="whatsapp" width="20" />
-                Ticktok
+              <a href="https://www.tiktok.com/@fredrico107" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.ibb.co/4R2V8P2P/tiktok.jpg" alt="TikTok" width="20" />
+                TikTok
               </a>
-              
             </div>
           </div>
         </div>
