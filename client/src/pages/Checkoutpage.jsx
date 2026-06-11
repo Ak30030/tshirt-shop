@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/useCart";
+import { usePaystackPayment } from "react-paystack";
 import './Checkoutpage.css';
+import api from "../utils/api";
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
@@ -10,7 +12,6 @@ export default function CheckoutPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [order, setOrder] = useState(null);
-  
 
   const [form, setForm] = useState({
     fullName: '',
@@ -25,10 +26,21 @@ export default function CheckoutPage() {
   });
 
   const token = localStorage.getItem("token");
-console.log('Token:', token);
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
-  const deliveryFee =form.deliveryMethod === 'pickup' ? 0 : (cartTotal > 210 ? 0 : 15);
+  const deliveryFee = form.deliveryMethod === 'pickup' ? 0 : (cartTotal > 210 ? 0 : 15);
   const totalAmount = cartTotal + deliveryFee;
+
+  // Paystack config
+  const paystackConfig = {
+    reference: new Date().getTime().toString(),
+    email: user.email,
+    amount: Math.round(totalAmount * 100), // Paystack uses pesewas
+    currency: "GHS",
+    publicKey: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+  };
+
+  const initializePayment = usePaystackPayment(paystackConfig);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -56,14 +68,11 @@ console.log('Token:', token);
     setError(null);
   };
 
-  const handlePlaceOrder = async () => {
-    console.log('Token:', token);
-    console.log('Cart:', cart);
-    const err = validateStep2();
-    if (err) { setError(err); return; }
+  // Save order to backend after payment
+  const saveOrder = async (reference) => {
     setLoading(true);
     try {
-      const res = await fetch('/orders', {
+      const res = await api('/orders', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -82,7 +91,9 @@ console.log('Token:', token);
             region: form.region
           },
           momoNumber: form.momoNumber,
-          notes: form.notes
+          notes: form.notes,
+          paystackReference: reference || null,
+          paymentStatus: reference ? 'paid' : 'pending'
         })
       });
       const data = await res.json();
@@ -97,17 +108,42 @@ console.log('Token:', token);
     }
   };
 
-  if (!token) {
-    return (
-      <div className="checkout-root">
-        <div className="checkout-denied">
-          <div className="denied-title">Please Login</div>
-          <div className="denied-sub">You need to be logged in to checkout</div>
-          <button className="denied-btn" onClick={() => navigate('/')}>Go to Login</button>
-        </div>
-      </div>
-    );
-  }
+  const handlePlaceOrder = async () => {
+    if(!token) {
+      alert("Please login to complete your order");
+      navigate('/login');
+      return;
+    }
+    const err = validateStep2();
+    if (err) { setError(err); return; }
+
+    if (form.paymentMethod === 'momo') {
+      // Open Paystack popup
+      initializePayment({
+        onSuccess: (response) => {
+          saveOrder(response.reference);
+        },
+        onClose: () => {
+          setError('Payment was cancelled. Please try again.');
+        }
+      });
+    } else {
+      // Cash on delivery — save order directly
+      saveOrder(null);
+    }
+  };
+
+ // if (!token) {
+    //return (
+      //<div className="checkout-root">
+        //<div className="checkout-denied">
+          //<div className="denied-title">Please Login</div>
+          //<div className="denied-sub">You need to be logged in to checkout</div>
+         // <button className="denied-btn" onClick={() => navigate('/')}>Go to Login</button>
+       // </div>
+      //</div>
+   // );
+  //}
 
   if (cart.length === 0 && step !== 3) {
     return (
@@ -123,8 +159,6 @@ console.log('Token:', token);
 
   return (
     <div className="checkout-root">
-
-      {/* NAVBAR */}
       <nav className="checkout-nav">
         <div className="nav-brand" onClick={() => navigate('/products')}>DICES<span>HUB</span></div>
         <div className="nav-steps">
@@ -145,7 +179,6 @@ console.log('Token:', token);
         </div>
       </nav>
 
-      {/* STEP 3 — CONFIRMED */}
       {step === 3 && (
         <div className="confirmed-wrap">
           <div className="confirmed-card">
@@ -160,7 +193,7 @@ console.log('Token:', token);
                 </div>
                 <div className="confirmed-row">
                   <span>Payment</span>
-                  <span>{order.paymentMethod === 'cash' ? 'Cash on Delivery' : 'Mobile Money'}</span>
+                  <span>{order.paymentMethod === 'cash' ? 'Cash on Delivery' : 'Mobile Money (Paystack)'}</span>
                 </div>
                 <div className="confirmed-row">
                   <span>Delivery</span>
@@ -172,11 +205,6 @@ console.log('Token:', token);
                 </div>
               </div>
             )}
-            {form.paymentMethod === 'momo' && (
-              <div className="momo-instruction">
-                Your order is confirmed and will be ready for pickup soon.
-              </div>
-            )}
             <div className="confirmed-btns">
               <button className="primary-btn" onClick={() => navigate('/products')}>Continue Shopping</button>
             </div>
@@ -184,42 +212,27 @@ console.log('Token:', token);
         </div>
       )}
 
-      {/* STEPS 1 & 2 */}
       {step !== 3 && (
         <div className="checkout-layout">
-
-          {/* LEFT — FORM */}
           <div className="checkout-form-wrap">
-
-            {/* STEP 1 */}
             {step === 1 && (
               <div className="form-section">
                 <div className="section-eyebrow">Step 1 of 2</div>
                 <h2 className="section-title">Delivery Information</h2>
                 {error && <div className="error-msg">{error}</div>}
-
                 <div className="method-selector">
                   <div className="method-label">Delivery Method</div>
                   <div className="method-options">
-                    <div
-                      className={`method-card ${form.deliveryMethod === 'delivery' ? 'active' : ''}`}
-                      onClick={() => setForm({ ...form, deliveryMethod: 'delivery' })}
-                    >
-                  
+                    <div className={`method-card ${form.deliveryMethod === 'delivery' ? 'active' : ''}`} onClick={() => setForm({ ...form, deliveryMethod: 'delivery' })}>
                       <div className="method-name">Home Delivery</div>
                       <div className="method-sub">Delivered to your doorstep</div>
                     </div>
-                    <div
-                      className={`method-card ${form.deliveryMethod === 'pickup' ? 'active' : ''}`}
-                      onClick={() => setForm({ ...form, deliveryMethod: 'pickup' })}
-                    >
-                    
+                    <div className={`method-card ${form.deliveryMethod === 'pickup' ? 'active' : ''}`} onClick={() => setForm({ ...form, deliveryMethod: 'pickup' })}>
                       <div className="method-name">Store Pickup</div>
                       <div className="method-sub">Pick up from our shop</div>
                     </div>
                   </div>
                 </div>
-
                 <div className="form-grid">
                   <div className="field full">
                     <label>Full Name</label>
@@ -229,7 +242,6 @@ console.log('Token:', token);
                     <label>Phone Number</label>
                     <input name="phone" value={form.phone} onChange={handleChange} placeholder="0XX XXX XXXX" />
                   </div>
-
                   {form.deliveryMethod === 'delivery' && (
                     <>
                       <div className="field full">
@@ -258,70 +270,54 @@ console.log('Token:', token);
                       </div>
                     </>
                   )}
-
                   <div className="field full">
                     <label>Order Notes (Optional)</label>
                     <textarea name="notes" value={form.notes} onChange={handleChange} placeholder="Any special instructions..." />
                   </div>
                 </div>
-
                 <button className="next-btn" onClick={handleNext}>Continue to Payment →</button>
               </div>
             )}
 
-            {/* STEP 2 */}
             {step === 2 && (
               <div className="form-section">
                 <div className="section-eyebrow">Step 2 of 2</div>
                 <h2 className="section-title">Payment Method</h2>
                 {error && <div className="error-msg">{error}</div>}
-
                 <div className="method-selector">
                   <div className="method-options">
-                    <div
-                      className={`method-card ${form.paymentMethod === 'cash' ? 'active' : ''}`}
-                      onClick={() => setForm({ ...form, paymentMethod: 'cash' })}
-                    >
-                      
+                    <div className={`method-card ${form.paymentMethod === 'cash' ? 'active' : ''}`} onClick={() => setForm({ ...form, paymentMethod: 'cash' })}>
                       <div className="method-name">Cash on Delivery</div>
                       <div className="method-sub">Pay with cash upon delivery</div>
                     </div>
-                    <div
-                      className={`method-card ${form.paymentMethod === 'momo' ? 'active' : ''}`}
-                      onClick={() => setForm({ ...form, paymentMethod: 'momo' })}
-                    >
-                      
+                    <div className={`method-card ${form.paymentMethod === 'momo' ? 'active' : ''}`} onClick={() => setForm({ ...form, paymentMethod: 'momo' })}>
                       <div className="method-name">Mobile Money</div>
-                      <div className="method-sub">MTN / TELECEL</div>
+                      <div className="method-sub">MTN / TELECEL via Paystack</div>
                     </div>
                   </div>
                 </div>
-
                 {form.paymentMethod === 'momo' && (
                   <div className="field full" style={{ marginTop: '20px' }}>
                     <label>Mobile Money Number</label>
                     <input name="momoNumber" value={form.momoNumber} onChange={handleChange} placeholder="0XX XXX XXXX" />
                   </div>
                 )}
-
                 <div className="step2-btns">
                   <button className="back-btn" onClick={() => setStep(1)}>← Back</button>
                   <button className="place-btn" onClick={handlePlaceOrder} disabled={loading}>
-                    {loading ? 'Placing Order...' : 'Place Order'}
+                    {loading ? 'Placing Order...' : form.paymentMethod === 'momo' ? 'Pay with Paystack' : 'Place Order'}
                   </button>
                 </div>
               </div>
             )}
           </div>
 
-          {/* RIGHT — ORDER SUMMARY */}
           <div className="checkout-summary">
             <div className="summary-title">Order Summary</div>
             <div className="summary-items">
               {cart.map(item => (
                 <div className="summary-item" key={item._id}>
-                  <img className="summary-img" src={item.image} alt={item.name}
-                    onError={e => { e.target.src = 'https://via.placeholder.com/60x70?text=T'; }} />
+                  <img className="summary-img" src={item.image} alt={item.name} onError={e => { e.target.src = 'https://via.placeholder.com/60x70?text=T'; }} />
                   <div className="summary-item-details">
                     <div className="summary-item-name">{item.name}</div>
                     <div className="summary-item-meta">Size: {item.size} · Qty: {item.quantity}</div>
@@ -331,33 +327,15 @@ console.log('Token:', token);
               ))}
             </div>
             <div className="summary-divider"></div>
-            <div className="summary-row">
-              <span>Subtotal</span>
-              <span>₵{cartTotal.toFixed(2)}</span>
-            </div>
-            <div className="summary-row">
-              <span>Delivery Fee</span>
-              <span>{deliveryFee === 0 ? 'Free' :'₵' + deliveryFee.toFixed(2)}</span>
-            </div>
+            <div className="summary-row"><span>Subtotal</span><span>₵{cartTotal.toFixed(2)}</span></div>
+            <div className="summary-row"><span>Delivery Fee</span><span>{deliveryFee === 0 ? 'Free' : '₵' + deliveryFee.toFixed(2)}</span></div>
             <div className="summary-divider"></div>
-            <div className="summary-total">
-              <span>Total</span>
-              <span>₵{totalAmount.toFixed(2)}</span>
-            </div>
-            {cartTotal < 210 && (
-              <div className="free-shipping-note">
-                Add ₵{(210 - cartTotal).toFixed(2)} more for free delivery!
-              </div>
-            )}
+            <div className="summary-total"><span>Total</span><span>₵{totalAmount.toFixed(2)}</span></div>
+            {cartTotal < 210 && <div className="free-shipping-note">Add ₵{(210 - cartTotal).toFixed(2)} more for free delivery!</div>}
             <div className="delivery-info">
-              {form.deliveryMethod === 'pickup'
-                ? 'Store Pickup — No delivery fee'
-                : deliveryFee === 0
-                  ? ' Free delivery on this order!'
-                  : ' Delivery within 2-3 business days'}
+              {form.deliveryMethod === 'pickup' ? 'Store Pickup — No delivery fee' : deliveryFee === 0 ? 'Free delivery on this order!' : 'Delivery within 2-3 business days'}
             </div>
           </div>
-
         </div>
       )}
     </div>
