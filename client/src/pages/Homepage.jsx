@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/useCart";
 import api from "../utils/api";
 import "./Homepage.css";
+import tshirtImg from "../assets/tshirt-hero.jpg";
 
 export default function HomePage() {
   const navigate = useNavigate();
@@ -65,6 +66,9 @@ export default function HomePage() {
           <div className="hero-overlay"></div>
           <div className="hero-pattern"></div>
           
+        </div>
+        <div className="hero-image-rigth">
+          <img src={tshirtImg} alt="T-shirts" className="hero-tshirt-img"/> 
         </div>
         <div className="hero-content">
           <div className="hero-eyebrow">New Collection 2026</div>
