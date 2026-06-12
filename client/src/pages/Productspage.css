@@ -95,19 +95,20 @@ html, body {
   color: #b8966e;
   margin-bottom: 10px;
   font-weight: 300;
-}
-.span{
-  color: white;
+  
 }
 
 .hero-title {
   font-family: 'Playfair Display', serif;
   font-size: 48px;
   font-weight: 700;
-  color: #b8966e;
+  color: #000000;
   line-height: 1.1;
 }
 
+.span{
+  color: white;
+}
 .hero-title em {
   font-style: italic;
   color: #b8966e;
