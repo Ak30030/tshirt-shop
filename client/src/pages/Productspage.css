@@ -96,8 +96,11 @@ html, body {
   margin-bottom: 10px;
   font-weight: 300;
 }
+.span{
+  color: white;
+}
 
-.hero-title-pp {
+.hero-title {
   font-family: 'Playfair Display', serif;
   font-size: 48px;
   font-weight: 700;
