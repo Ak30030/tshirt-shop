@@ -90,15 +90,15 @@ h2 {
 }
 
 h1.hero-wear {
-  color: #111 !important;
-  font-family: 'Playfair Display', serif !important;
-  font-size: 76px !important;
-  font-weight: 700 !important;
+  color: #111 ;
+  font-family: 'Playfair Display', serif ;
+  font-size: 76px ;
+  font-weight: 700;
 }
 
 h1.hero-wear em {
-  color: #b8966e !important;
-  font-style: italic !important;
+  color: #b8966e;
+  font-style: italic ;
 }
 
 h1 {
@@ -146,9 +146,9 @@ code {
   background: var(--code-bg);
 }
 .hero-wear {
-  color: #111 !important;
+  color: #111;
 }
 
 .hero-wear em {
-  color: #b8966e !important;
+  color: #b8966e;
 }
