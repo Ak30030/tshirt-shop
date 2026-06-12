@@ -82,12 +82,23 @@ textarea::placeholder {
 * {
   box-sizing: border-box;
 }
-
 h1,
 h2 {
   font-family: var(--heading);
   font-weight: 500;
   color: var(--text-h);
+}
+
+h1.hero-wear {
+  color: #111 !important;
+  font-family: 'Playfair Display', serif !important;
+  font-size: 76px !important;
+  font-weight: 700 !important;
+}
+
+h1.hero-wear em {
+  color: #b8966e !important;
+  font-style: italic !important;
 }
 
 h1 {
