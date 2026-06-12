@@ -107,7 +107,7 @@ html, body {
 }
 
 .span{
-  color: white !important;
+  color: white ;
 }
 .hero-title em {
   font-style: italic;
