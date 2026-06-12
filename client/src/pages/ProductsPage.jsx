@@ -69,7 +69,7 @@ export default function ProductsPage() {
         <div className="hero-left">
           <div className="hero-eyebrow">Our Collection</div>
           <div className="hero-title">
-            Premium <em>T-Shirts</em>
+           <span className="span">Premium </span> <em>T-Shirts</em>
           </div>
           {!loading && (
             <div className="hero-count">

@@ -77,7 +77,8 @@ export default function HomePage() {
 
         <div className="hero-content">
           <div className="hero-eyebrow">New Collection 2026</div>
-          <h1 className="hero-title">
+          <h1 className="hero-wear">
+            
             Wear What<br />
             <em>Speaks</em> For You
           </h1>
